@@ -3,6 +3,7 @@ import Toybox.WatchUi;
 import Toybox.System;
 
 // Delegate for the main configuration menu
+(:modern_only)
 class ConfigMenuDelegate extends WatchUi.Menu2InputDelegate {
 
     function initialize() {
@@ -71,6 +72,7 @@ class ConfigMenuDelegate extends WatchUi.Menu2InputDelegate {
 }
 
 // Delegate for the lap time picker submenu
+(:modern_only)
 class LapTimeMenuDelegate extends WatchUi.Menu2InputDelegate {
 
     function initialize() {
@@ -96,6 +98,7 @@ class LapTimeMenuDelegate extends WatchUi.Menu2InputDelegate {
 }
 
 // Delegate for the mode picker submenu
+(:modern_only)
 class ModeMenuDelegate extends WatchUi.Menu2InputDelegate {
 
     function initialize() {
@@ -119,7 +122,9 @@ class ModeMenuDelegate extends WatchUi.Menu2InputDelegate {
     }
 }
 
-// Rebuild the main config menu in-place with updated values
+// Rebuild the main config menu in-place with updated values.
+// Shared by both modern and legacy paths — AlvarezApp.buildMainMenu() is
+// resolved to the right variant by the compiler via build annotations.
 function rebuildMainMenu() {
     var views = AlvarezApp.buildMainMenu();
     WatchUi.switchToView(views[0], views[1], WatchUi.SLIDE_IMMEDIATE);

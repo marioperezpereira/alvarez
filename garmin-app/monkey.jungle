@@ -1,1 +1,10 @@
 project.manifest = manifest.xml
+base.sourcePath = source
+base.excludeAnnotations = legacy_only
+
+# Relojes CIQ 2.x sin Menu2: path legacy
+fr235.excludeAnnotations = modern_only
+fr630.excludeAnnotations = modern_only
+fenix3.excludeAnnotations = modern_only
+fenix3_hr.excludeAnnotations = modern_only
+vivoactive_hr.excludeAnnotations = modern_only

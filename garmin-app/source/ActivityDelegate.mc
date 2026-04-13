@@ -39,6 +39,7 @@ class ActivityDelegate extends WatchUi.BehaviorDelegate {
         return false;
     }
 
+    (:modern_only)
     function showPauseMenu() {
         var lapNum = $.workout.currentLap;
         var menu = new WatchUi.Menu2({:title => "Lap " + lapNum + " - Paused"});
@@ -46,8 +47,18 @@ class ActivityDelegate extends WatchUi.BehaviorDelegate {
         menu.addItem(new WatchUi.MenuItem("End workout", null, "end", null));
         WatchUi.pushView(menu, new PauseMenuDelegate(), WatchUi.SLIDE_UP);
     }
+
+    (:legacy_only)
+    function showPauseMenu() {
+        var menu = new WatchUi.Menu();
+        menu.setTitle("Lap " + $.workout.currentLap + " Paused");
+        menu.addItem("Resume", :resume);
+        menu.addItem("End workout", :end);
+        WatchUi.pushView(menu, new PauseMenuLegacyDelegate(), WatchUi.SLIDE_UP);
+    }
 }
 
+(:modern_only)
 class PauseMenuDelegate extends WatchUi.Menu2InputDelegate {
 
     function initialize() {
