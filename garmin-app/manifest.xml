@@ -7,7 +7,7 @@
         minApiLevel="3.1.0"
         name="@Strings.AppName"
         type="watch-app"
-        version="1.0.0">
+        version="1.0.1">
         <iq:products>
             <!-- Fenix 5 family -->
             <iq:product id="fenix5"/>

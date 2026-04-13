@@ -169,6 +169,14 @@ class WorkoutSession {
     }
 
     function completeLap() {
+        _recordLap(true, true);
+    }
+
+    // Capture the current lap into lapHistory.
+    // - addFitLap: whether to call session.addLap() (must be false if the FIT
+    //   session has been stopped, e.g. while paused).
+    // - playTone: whether to play the lap-completion tone + vibration.
+    function _recordLap(addFitLap, playTone) {
         if (!isRunning || isPaused) {
             return;
         }
@@ -208,13 +216,14 @@ class WorkoutSession {
         };
         lapHistory.add(lapData);
 
-        // Record lap in FIT
-        if (session != null) {
+        // Record lap in FIT (only while the session is actively recording)
+        if (addFitLap && session != null) {
             session.addLap();
         }
 
-        // Play lap completion tone
-        playLapTone();
+        if (playTone) {
+            playLapTone();
+        }
 
         // Advance to next lap
         currentLap++;
@@ -282,18 +291,26 @@ class WorkoutSession {
     }
 
     function stopWorkout() {
-        // Record the in-progress lap before stopping
+        // If paused, pause() already called session.stop() – don't touch the
+        // session again (addLap / stop on a stopped session throws).
+        var sessionAlreadyStopped = isPaused;
+
         if (isRunning) {
             if (isPaused) {
-                isPaused = false;  // briefly unpause so completeLap works
+                // Finalize pause duration so the final lap time is accurate
+                totalPausedMs += System.getTimer() - pauseStartTime;
+                isPaused = false;
             }
-            completeLap();
+            // Record the in-progress lap: only add to FIT if session still recording
+            _recordLap(!sessionAlreadyStopped, false);
         }
 
         isRunning = false;
         isPaused = false;
         if (session != null) {
-            session.stop();
+            if (!sessionAlreadyStopped) {
+                session.stop();
+            }
             session.save();
             session = null;
         }
