@@ -67,7 +67,7 @@ export default function AnalyzerApp() {
   function buildShare(test: StoredTest) {
     const base = import.meta.env.BASE_URL || '/';
     const token = encodeShare(test);
-    const url = `${window.location.origin}${base}analizador/?t=${token}`;
+    const url = `${window.location.origin}${base}analisis/?t=${token}`;
     setShareUrl(url);
     if (navigator.clipboard) navigator.clipboard.writeText(url).catch(() => {});
   }

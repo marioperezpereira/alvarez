@@ -33,7 +33,8 @@ export default function PaceHrChart({ test }: { test: StoredTest }) {
           />
           <YAxis
             yAxisId="left"
-            domain={[paceMax, paceMin]}
+            domain={[paceMin, paceMax]}
+            reversed
             tickFormatter={(v) => formatPace(Number(v))}
             tick={{ fill: 'rgba(17,17,17,0.6)', fontSize: 12 }}
             width={48}
