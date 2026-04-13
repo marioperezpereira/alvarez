@@ -1,0 +1,246 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL;
+const devices = [
+  'Fenix 5 / 5S / 5X / 5 Plus',
+  'Fenix 6 / 6S / 6 Pro / 6X Pro',
+  'Fenix 7 / 7S / 7X / 7 Pro / 7S Pro / 7X Pro',
+  'Fenix 8 / 8 Pro / 8 Solar / Fenix E',
+  'Forerunner 245 / 255 / 265 / 745 / 935 / 945 / 955 / 965 / 970',
+  'Enduro / Enduro 3',
+  'Epix 2 / Epix 2 Pro (42/47/51 mm)',
+  'Venu 2 / 2S / 2 Plus / 3 / 3S',
+];
+---
+<Base title="El test · DIPER-Álvarez">
+  <p class="mb-4 text-sm uppercase tracking-widest text-ink/50">Cómo realizarlo</p>
+  <h1 class="font-display text-5xl leading-tight tracking-tight md:text-6xl">
+    El test, paso a paso
+  </h1>
+  <p class="mt-6 max-w-2xl text-lg text-ink/80">
+    Sólo necesitas una pista de 400 m, un cronómetro y honestidad para llegar al fallo.
+    Estas son las instrucciones completas. Más abajo, una app de Garmin que automatiza el cronometraje
+    y el metrónomo si quieres facilitarte el trabajo.
+  </p>
+
+  <!-- 1. Material -->
+  <section class="mt-20">
+    <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-ink/50">Paso 1</p>
+        <h2 class="mt-1 font-display text-3xl">Material</h2>
+      </div>
+      <div class="space-y-3 text-ink/80">
+        <p><strong>Imprescindible:</strong> pista de atletismo de 400 m (calle 1) y un cronómetro con función de vueltas. Cualquier reloj deportivo o el cronómetro del móvil sirve.</p>
+        <p><strong>Recomendado:</strong> pulsómetro (banda pectoral u óptico) para registrar la frecuencia cardíaca. Y unas zapatillas con las que estés cómodo en pista —no es necesario clavos.</p>
+        <p><strong>Opcional pero útil:</strong> un compañero que te cante los tiempos en cada paso de cuarto (100 m, 200 m, 300 m), o una app que actúe como metrónomo. Sin ello, tendrás que vigilar tú mismo el reloj de cuarto en cuarto.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Calentamiento -->
+  <section class="mt-16">
+    <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-ink/50">Paso 2</p>
+        <h2 class="mt-1 font-display text-3xl">Calentamiento</h2>
+      </div>
+      <div class="space-y-3 text-ink/80">
+        <p>15-20 minutos de carrera continua suave, seguidos de 4-6 progresiones de 80-100 m a ritmos crecientes. Cierra con movilidad articular y técnica de carrera ligera.</p>
+        <p>Acaba el calentamiento <strong>3-5 minutos antes</strong> de empezar el test, no más. Si te enfrías demasiado, la primera vuelta se hace artificialmente dura y desvirtúa el resultado.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Elegir 1ª vuelta -->
+  <section class="mt-16">
+    <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-ink/50">Paso 3</p>
+        <h2 class="mt-1 font-display text-3xl">Elige tu primera vuelta</h2>
+      </div>
+      <div class="space-y-4 text-ink/80">
+        <p>
+          Es la única decisión real del test. Demasiado rápida: el test dura cuatro vueltas y no obtienes
+          información útil. Demasiado lenta: la última vuelta resulta irrealmente exigente y vuelves a
+          terminar antes de tiempo.
+        </p>
+        <p><strong>Apunta a completar entre 13 y 16 vueltas.</strong> Como referencia rápida:</p>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-sm tabular-nums">
+            <thead>
+              <tr class="border-b border-ink/10 text-left text-xs uppercase tracking-wider text-ink/50">
+                <th class="py-2 pr-4">1ª vuelta</th>
+                <th class="py-2 pr-4">Ritmo de salida</th>
+                <th class="py-2 pr-4">Vuelta 14</th>
+                <th class="py-2">Ritmo en vuelta 14</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-ink/5"><td class="py-2 pr-4 font-display">2:00</td><td class="py-2 pr-4">5:00 /km</td><td class="py-2 pr-4">1:08</td><td class="py-2">2:50 /km</td></tr>
+              <tr class="border-b border-ink/5"><td class="py-2 pr-4 font-display">2:20</td><td class="py-2 pr-4">5:50 /km</td><td class="py-2 pr-4">1:28</td><td class="py-2">3:40 /km</td></tr>
+              <tr class="border-b border-ink/5"><td class="py-2 pr-4 font-display">2:40</td><td class="py-2 pr-4">6:40 /km</td><td class="py-2 pr-4">1:48</td><td class="py-2">4:30 /km</td></tr>
+              <tr class="border-b border-ink/5"><td class="py-2 pr-4 font-display">3:00</td><td class="py-2 pr-4">7:30 /km</td><td class="py-2 pr-4">2:08</td><td class="py-2">5:20 /km</td></tr>
+              <tr><td class="py-2 pr-4 font-display">3:20</td><td class="py-2 pr-4">8:20 /km</td><td class="py-2 pr-4">2:28</td><td class="py-2">6:10 /km</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-sm text-ink/60">
+          Si es tu primer DIPER, elige conservador. Siempre podrás intentar uno más rápido en el siguiente.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. La regla -->
+  <section class="mt-16">
+    <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-ink/50">Paso 4</p>
+        <h2 class="mt-1 font-display text-3xl">La regla</h2>
+      </div>
+      <div class="space-y-3 text-ink/80">
+        <p>Cada vuelta es <strong>4 segundos más rápida que la anterior</strong>. Sin excepciones.</p>
+        <p>Equivalencias prácticas que la regla te permite calcular de cabeza:</p>
+        <ul class="ml-4 list-disc space-y-1">
+          <li><strong>−10 segundos por kilómetro</strong> en cada vuelta sucesiva.</li>
+          <li><strong>−1 segundo por cada 100 m</strong>: si pasaste el 100 m en 30 s la vuelta anterior, esta vez tienes que pasarlo en 29 s. El 200 m, en 58 s. El 300 m, en 87 s.</li>
+        </ul>
+        <p>
+          Esta es la simplificación clave de la versión de Álvarez: en plena vuelta, sin mirar el reloj
+          principal, sabes en qué tiempo deberías pasar cada referencia de 100 m sumando o restando
+          enteros. Esto hace el test ejecutable sin ningún dispositivo más allá de un cronómetro.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Cómo controlar el ritmo sin app -->
+  <section class="mt-16">
+    <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-ink/50">Paso 5</p>
+        <h2 class="mt-1 font-display text-3xl">Controlar el ritmo</h2>
+      </div>
+      <div class="space-y-4 text-ink/80">
+        <p>Tienes tres formas, ordenadas de menos a más asistencia:</p>
+        <ol class="space-y-3">
+          <li>
+            <strong>1 — Sólo cronómetro de pulsera.</strong> Antes del test, escribe en una tira de papel
+            (o tu antebrazo) los tiempos objetivo de cada paso de 100 m para las 16 primeras vueltas.
+            En carrera, mira el cronómetro al pasar cada referencia y ajusta. Funciona, pero exige
+            atención y reduce la concentración.
+          </li>
+          <li>
+            <strong>2 — Compañero a pie de pista.</strong> Esta es la forma clásica. Una persona con la
+            tabla de tiempos canta el tiempo objetivo en cada paso de 100 m. Tú sólo corres y escuchas.
+            Es la modalidad menos invasiva mentalmente y la que mejor permite ir al fallo real.
+          </li>
+          <li>
+            <strong>3 — Reloj con metrónomo o app dedicada.</strong> Cualquier dispositivo que pueda
+            emitir un tono cada cuarto de vuelta al ritmo objetivo. La <a href={`${base}#app`} class="text-accent underline-offset-4 hover:underline">app que hemos publicado para Garmin</a> hace exactamente esto, y además
+            graba la actividad para analizarla después.
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Cuándo termina -->
+  <section class="mt-16">
+    <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-ink/50">Paso 6</p>
+        <h2 class="mt-1 font-display text-3xl">Cuándo termina</h2>
+      </div>
+      <div class="space-y-3 text-ink/80">
+        <p>
+          El test acaba en la <strong>primera vuelta que no alcanzas el tiempo objetivo</strong>.
+          Esa vuelta no cuenta como completa, pero sí se registra: define tu velocidad máxima
+          sostenida en esfuerzo continuo creciente.
+        </p>
+        <p>
+          No te pares al fallar: corre hasta cerrar esa vuelta (los últimos metros son los más
+          informativos para conocer tu ritmo y FC máximos). Después, recupera caminando.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Después -->
+  <section class="mt-16">
+    <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-ink/50">Paso 7</p>
+        <h2 class="mt-1 font-display text-3xl">Analiza y guarda</h2>
+      </div>
+      <div class="space-y-3 text-ink/80">
+        <p>
+          Apunta el número de vueltas completas, el tiempo de la última vuelta válida y, si tienes,
+          la frecuencia cardíaca máxima. Eso es el resultado bruto del test.
+        </p>
+        <p>
+          Si grabaste la actividad como FIT/TCX/GPX, súbela al
+          {' '}<a href={`${base}analizador`} class="text-accent underline-offset-4 hover:underline">analizador</a>{' '}
+          para visualizar la progresión y, sobre todo, para comparar este test con futuros.
+          La utilidad real del DIPER aparece al verlo evolucionar a lo largo de meses.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- App como facilitador -->
+  <section id="app" class="mt-24 rounded-lg border border-ink/10 bg-white/40 p-8 md:p-12">
+    <p class="text-xs uppercase tracking-widest text-ink/50">Facilitador opcional</p>
+    <h2 class="mt-1 font-display text-4xl">App para Garmin</h2>
+    <p class="mt-4 max-w-2xl text-ink/80">
+      Hemos publicado <em>Alvarez — Diper</em> en el Connect IQ Store. Ejecuta el protocolo completo:
+      calcula el objetivo de cada vuelta, emite un tono cada cuarto de 400 m como metrónomo, marca
+      los pasos de vuelta y graba la actividad en FIT estándar. No es imprescindible para el test,
+      pero te quita de encima el cronometraje y te deja correr.
+    </p>
+
+    <div class="mt-10 grid gap-8 md:grid-cols-3">
+      <figure>
+        <img src={`${base}images/screen_menu.png`} alt="Menú principal" class="w-full rounded border border-ink/10" />
+        <figcaption class="mt-2 text-sm text-ink/60">Fija tu primera vuelta y modo antes de empezar.</figcaption>
+      </figure>
+      <figure>
+        <img src={`${base}images/screen_activity.png`} alt="Pantalla de actividad" class="w-full rounded border border-ink/10" />
+        <figcaption class="mt-2 text-sm text-ink/60">Tiempo grande, objetivo visible, barra con marcas de cuarto.</figcaption>
+      </figure>
+      <figure>
+        <img src={`${base}images/screen_summary.png`} alt="Resumen" class="w-full rounded border border-ink/10" />
+        <figcaption class="mt-2 text-sm text-ink/60">Resumen por vuelta: tiempo, ritmo máximo y pulso.</figcaption>
+      </figure>
+    </div>
+
+    <div class="mt-10 grid gap-10 md:grid-cols-2">
+      <div>
+        <h3 class="font-display text-xl">Lo que hace</h3>
+        <ul class="mt-3 space-y-1.5 text-sm text-ink/80">
+          <li>· Elige tu 1ª vuelta (de 2:00 a 4:00 en pasos de 4 s).</li>
+          <li>· Muestra el objetivo de cada vuelta y avisa si te pasas.</li>
+          <li>· Tono + vibración en cada cuarto de vuelta (100 m).</li>
+          <li>· Tono triple al cerrar vuelta.</li>
+          <li>· Modo manual (botón de vuelta) o automático por GPS (400 m).</li>
+          <li>· Graba actividad FIT estándar para Garmin Connect, Strava, etc.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display text-xl">Dispositivos compatibles</h3>
+        <ul class="mt-3 space-y-1.5 text-sm text-ink/80">
+          {devices.map((d) => <li>· {d}</li>)}
+        </ul>
+        <p class="mt-3 text-xs text-ink/50">Total: 92 dispositivos. Lista completa en la ficha de Connect IQ.</p>
+      </div>
+    </div>
+
+    <a
+      href="https://apps.garmin.com/en-US/apps/2cf041b6-28ad-4d4d-ba77-31f2a947d2b1"
+      class="mt-10 inline-block rounded-full bg-ink px-5 py-2 text-sm text-paper hover:opacity-90"
+    >
+      Ver en Connect IQ Store →
+    </a>
+  </section>
+</Base>
