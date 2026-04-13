@@ -3,7 +3,7 @@ import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, X
 import type { StoredTest } from '../../lib/types';
 import { formatPace } from '../../lib/gpxParser';
 
-const COLORS = ['#c0392b', '#111111', '#1f6feb', '#ca8a04', '#6d28d9'];
+const COLORS = ['#ff701a', '#111111', '#1f6feb', '#16a34a', '#6d28d9'];
 
 export default function Comparison({ tests, tolerance = 2 }: { tests: StoredTest[]; tolerance?: number }) {
   const { rows, tickVals } = useMemo(() => {

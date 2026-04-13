@@ -65,7 +65,7 @@ export default function PaceHrChart({ test }: { test: StoredTest }) {
             type="monotone"
             dataKey="pace"
             name="Ritmo"
-            stroke="#c0392b"
+            stroke="#ff701a"
             strokeWidth={2}
             dot={{ r: 3 }}
             activeDot={{ r: 6 }}
