@@ -42,17 +42,17 @@ class SummaryView extends WatchUi.View {
             return;
         }
 
-        // Lap rows - two lines per lap: time+pace, then HR
+        // Lap rows — one compact line per lap: "L1  0:02  3:30/km  180"
         var lapFont = Graphics.FONT_XTINY;
         var lapFontH = dc.getFontHeight(lapFont);
-        var lineH = lapFontH + 6;
+        var lineH = lapFontH + 2;
 
         fontH = dc.getFontHeight(Graphics.FONT_SMALL);
-        y += fontH + 8;
+        y += fontH + 4;
 
-        // Calculate how many laps fit (2 lines per lap)
-        var maxY = h * 88 / 100;
-        var maxLaps = (maxY - y) / (lineH * 2);
+        // Calculate how many laps fit
+        var maxY = h * 92 / 100;
+        var maxLaps = (maxY - y) / lineH;
         if (maxLaps < 1) {
             maxLaps = 1;
         }
@@ -63,7 +63,7 @@ class SummaryView extends WatchUi.View {
             startIdx = 0;
         }
 
-        var leftPad = w * 12 / 100;
+        var leftPad = w * 8 / 100;
 
         for (var i = startIdx; i < totalLaps; i++) {
             var lap = laps[i] as Dictionary;
@@ -71,31 +71,18 @@ class SummaryView extends WatchUi.View {
             var timeMs = lap["timeMs"] as Number;
             var maxPace = lap["maxPace"] as Float;
             var maxHr = lap["maxHr"] as Number;
-            var avgHr = lap["avgHr"] as Number;
 
             var timeStr = WorkoutSession.formatElapsedMs(timeMs);
             var maxPaceStr = WorkoutSession.formatPace(maxPace);
+            var hrStr = (maxHr > 0) ? maxHr + "" : "--";
 
-            // Line 1: Lap number, time, max pace
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
             dc.drawText(leftPad, y, lapFont,
-                "L" + lapNum + "  " + timeStr,
+                "L" + lapNum + " " + timeStr,
                 Graphics.TEXT_JUSTIFY_LEFT);
             dc.drawText(w - leftPad, y, lapFont,
-                "max " + maxPaceStr + "/km",
+                maxPaceStr + "  " + hrStr,
                 Graphics.TEXT_JUSTIFY_RIGHT);
-            y += lineH;
-
-            // Line 2: HR info
-            var hrStr = "";
-            if (avgHr > 0 || maxHr > 0) {
-                hrStr = "HR " + avgHr + " / max " + maxHr + " bpm";
-            } else {
-                hrStr = "HR --";
-            }
-            dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(leftPad, y, lapFont, hrStr,
-                Graphics.TEXT_JUSTIFY_LEFT);
             y += lineH;
         }
     }

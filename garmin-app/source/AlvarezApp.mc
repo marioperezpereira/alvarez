@@ -11,8 +11,23 @@ class AlvarezApp extends Application.AppBase {
         AppBase.initialize();
     }
 
+    // Modern devices (CIQ 3.x): Menu2 can be returned directly as initial view.
+    (:modern_only)
     function getInitialView() {
         return buildMainMenu();
+    }
+
+    // Legacy devices (CIQ 1.x): CIQ 1.x has two restrictions that preclude
+    // using a native Menu as the initial view or nesting Menus:
+    //   1. The base view must be a user View subclass.
+    //   2. You cannot pushView a native Menu on top of another native Menu
+    //      without crashing with "Native base view is not supported".
+    // So we replace the entire config stack with a custom View driven by
+    // UP/DOWN/START buttons.
+    (:legacy_only)
+    function getInitialView() {
+        var view = new LegacyConfigView();
+        return [view, new LegacyConfigDelegate(view)];
     }
 
     (:modern_only)
@@ -30,21 +45,4 @@ class AlvarezApp extends Application.AppBase {
         return [menu, new ConfigMenuDelegate()] as Array;
     }
 
-    // Legacy variant for CIQ 2.x devices (see monkey.jungle). Same signature
-    // as the modern buildMainMenu() so getInitialView() call site is stable.
-    (:legacy_only)
-    static function buildMainMenu() {
-        var menu = new WatchUi.Menu();
-        menu.setTitle("Alvarez Diper");
-
-        var lapLabel = WorkoutSession.formatTimePadded($.workout.firstLapTarget);
-        menu.addItem("1st lap " + lapLabel, :laptime);
-
-        var modeLabel = ($.workout.mode == $.MODE_MANUAL) ? "Manual" : "GPS";
-        menu.addItem("Mode: " + modeLabel, :mode);
-
-        menu.addItem("Start workout", :start);
-
-        return [menu, new ConfigMenuLegacyDelegate()];
-    }
 }

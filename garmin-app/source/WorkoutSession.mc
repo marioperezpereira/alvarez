@@ -79,11 +79,14 @@ class WorkoutSession {
     }
 
     function startWorkout() {
-        // Create FIT recording session
+        // Create FIT recording session.
+        // NOTE: on CIQ 1.x the sport/subSport constants live in
+        // ActivityRecording; on 2.x+ they were duplicated under Activity.
+        // ActivityRecording.SPORT_* works across all supported devices.
         session = ActivityRecording.createSession({
             :name => "Alvarez - Diper",
-            :sport => Activity.SPORT_RUNNING,
-            :subSport => Activity.SUB_SPORT_TRACK
+            :sport => ActivityRecording.SPORT_RUNNING,
+            :subSport => ActivityRecording.SUB_SPORT_TRACK
         });
 
         // Enable GPS

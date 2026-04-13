@@ -122,9 +122,8 @@ class ModeMenuDelegate extends WatchUi.Menu2InputDelegate {
     }
 }
 
-// Rebuild the main config menu in-place with updated values.
-// Shared by both modern and legacy paths — AlvarezApp.buildMainMenu() is
-// resolved to the right variant by the compiler via build annotations.
+// Rebuild the main config menu in-place with updated values (modern path).
+(:modern_only)
 function rebuildMainMenu() {
     var views = AlvarezApp.buildMainMenu();
     WatchUi.switchToView(views[0], views[1], WatchUi.SLIDE_IMMEDIATE);
