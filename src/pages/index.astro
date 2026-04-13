@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="DIPER · Álvarez — El test progresivo de 400 m">
+  <section class="mb-24">
+    <p class="mb-6 text-sm uppercase tracking-widest text-ink/50">Test progresivo de 400 m</p>
+    <h1 class="font-display text-5xl leading-[1.05] tracking-tight md:text-7xl">
+      Corre hasta que<br />
+      <span class="text-accent">ya no puedas</span>.
+    </h1>
+    <p class="mt-8 max-w-xl text-lg text-ink/80">
+      Un test de campo brutalmente simple: vueltas de 400 m, cada una 4 segundos más rápida que la anterior.
+      Sin descansos. Se termina cuando fallas el tiempo.
+    </p>
+    <div class="mt-10 flex flex-wrap gap-4 text-sm">
+      <a href={`${base}metodo`} class="rounded-full border border-ink px-5 py-2 hover:bg-ink hover:text-paper transition">
+        Cómo funciona →
+      </a>
+      <a href={`${base}analizador`} class="rounded-full bg-accent px-5 py-2 text-paper hover:opacity-90 transition">
+        Analiza tu test →
+      </a>
+    </div>
+  </section>
+
+  <section class="mb-24 grid gap-16 md:grid-cols-2">
+    <div>
+      <h2 class="font-display text-3xl">El test</h2>
+      <p class="mt-4 text-ink/80">
+        El DIPER fue diseñado por <strong>Mariano García-Verdugo</strong>, entrenador español de medio fondo.
+        Su versión original encadena 400 m a intensidad creciente para estimar, con un único esfuerzo,
+        la tolerancia del corredor al umbral y a la velocidad aeróbica máxima.
+      </p>
+      <p class="mt-4 text-ink/80">
+        <strong>Roberto Álvarez</strong>, entrenador nacional de atletismo, introdujo una modificación continua
+        —sin pausas entre vueltas— que convierte el test en una progresión ininterrumpida hasta el fallo.
+        Es la versión que recoge esta web.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="font-display text-3xl">Por qué importa</h2>
+      <ul class="mt-4 space-y-3 text-ink/80">
+        <li><span class="font-display text-accent">·</span> Un único test de campo, sin laboratorio.</li>
+        <li><span class="font-display text-accent">·</span> Estima tu <em>ritmo sostenible más rápido</em>.</li>
+        <li><span class="font-display text-accent">·</span> Sirve de referencia longitudinal para medir progreso.</li>
+        <li><span class="font-display text-accent">·</span> Expone tu tolerancia al lactato mejor que cualquier test de tirada corta.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="mb-24">
+    <h2 class="font-display text-3xl">El protocolo, en cuatro pasos</h2>
+    <ol class="mt-8 grid gap-10 md:grid-cols-4">
+      <li>
+        <div class="font-display text-6xl text-accent/80">1</div>
+        <h3 class="mt-2 font-display text-xl">Elige tu 1ª vuelta</h3>
+        <p class="mt-2 text-sm text-ink/70">Entre 2:00 y 4:00, conservador. Apunta a al menos 14 vueltas.</p>
+      </li>
+      <li>
+        <div class="font-display text-6xl text-accent/80">2</div>
+        <h3 class="mt-2 font-display text-xl">Resta 4 s</h3>
+        <p class="mt-2 text-sm text-ink/70">Cada vuelta siguiente, 4 segundos más rápida que la anterior. Sin excepciones.</p>
+      </li>
+      <li>
+        <div class="font-display text-6xl text-accent/80">3</div>
+        <h3 class="mt-2 font-display text-xl">No pares</h3>
+        <p class="mt-2 text-sm text-ink/70">La transición entre vueltas es continua. La marca de vuelta es solo un chasquido del cronómetro.</p>
+      </li>
+      <li>
+        <div class="font-display text-6xl text-accent/80">4</div>
+        <h3 class="mt-2 font-display text-xl">Hasta fallar</h3>
+        <p class="mt-2 text-sm text-ink/70">El test termina en la primera vuelta que no alcanzas el tiempo objetivo.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="mb-24 grid gap-8 md:grid-cols-2">
+    <a href={`${base}app-garmin`} class="group block rounded border border-ink/10 bg-white/40 p-8 hover:border-ink/30 transition">
+      <div class="text-xs uppercase tracking-widest text-ink/50">Durante el test</div>
+      <h3 class="mt-2 font-display text-3xl">App para Garmin</h3>
+      <p class="mt-3 text-ink/70">Metrónomo cada cuarto de vuelta, objetivo por vuelta, grabación FIT completa. 92 dispositivos compatibles.</p>
+      <p class="mt-6 text-sm text-accent group-hover:underline">Ver la app →</p>
+    </a>
+    <a href={`${base}analizador`} class="group block rounded border border-ink/10 bg-white/40 p-8 hover:border-ink/30 transition">
+      <div class="text-xs uppercase tracking-widest text-ink/50">Después del test</div>
+      <h3 class="mt-2 font-display text-3xl">Analizador</h3>
+      <p class="mt-3 text-ink/70">Sube tu TCX/GPX, visualiza ritmo y pulso por vuelta, compara tests entre sí. Todo en tu navegador.</p>
+      <p class="mt-6 text-sm text-accent group-hover:underline">Abrir analizador →</p>
+    </a>
+  </section>
+</Base>
