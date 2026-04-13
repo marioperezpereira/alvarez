@@ -2,17 +2,20 @@ import React, { useMemo } from 'react';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { StoredTest } from '../../lib/types';
 import { formatPace } from '../../lib/gpxParser';
+import { isIncompleteLap } from '../../lib/lapStats';
 
 export default function PaceHrChart({ test }: { test: StoredTest }) {
-  const data = useMemo(
-    () =>
-      test.data.laps.map((l) => ({
+  const data = useMemo(() => {
+    const laps = test.data.laps;
+    const lastIdx = laps.length - 1;
+    return laps
+      .filter((l, i) => !(i === lastIdx && isIncompleteLap(l.distance)))
+      .map((l) => ({
         lap: l.lapNumber,
         pace: Math.round(l.pace),
         hr: l.ppm > 0 ? l.ppm : null,
-      })),
-    [test]
-  );
+      }));
+  }, [test]);
 
   const paces = data.map((d) => d.pace).filter((n) => n > 0);
   const paceMin = Math.max(120, Math.min(...paces) - 10);
