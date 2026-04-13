@@ -36,13 +36,31 @@ src/
 ├── layouts/Base.astro
 ├── pages/
 │   ├── index.astro           # home
-│   ├── metodo.mdx            # ensayo
-│   ├── app-garmin.astro      # showcase
+│   ├── metodo.mdx            # ensayo científico
+│   ├── test.astro            # instrucciones paso a paso + app
+│   ├── app-garmin.astro      # 301 → /test#app
 │   └── analizador.astro      # herramienta
 ├── components/analyzer/      # islas React
 ├── lib/                      # parser TCX/GPX, storage, share, cálculos protocolo
 └── styles/global.css
+
+garmin-app/                   # código fuente Monkey C de la app Garmin
+├── manifest.xml              # 92 dispositivos compatibles
+├── source/                   # WorkoutSession, ActivityView, etc.
+└── resources/                # icono y strings
 ```
+
+### App Garmin (`garmin-app/`)
+
+App Connect IQ que ejecuta el protocolo en el reloj. Para compilarla necesitas el SDK de Connect IQ
+(`monkeyc`) y tu propia `developer_key`. Build de release:
+
+```sh
+cd garmin-app
+monkeyc -e -o bin/Alvarez.iq -f monkey.jungle -y /path/to/developer_key.der
+```
+
+Publicada en Connect IQ Store: <https://apps.garmin.com/en-US/apps/2cf041b6-28ad-4d4d-ba77-31f2a947d2b1>
 
 ## Créditos
 
