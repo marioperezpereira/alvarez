@@ -2,14 +2,18 @@
 import Base from '../layouts/Base.astro';
 const base = import.meta.env.BASE_URL;
 const devices = [
-  'Fenix 5 / 5S / 5X / 5 Plus',
-  'Fenix 6 / 6S / 6 Pro / 6X Pro',
+  'Fenix 3 / 3 HR',
+  'Fenix 5 / 5S / 5X / 5 Plus / 5S Plus / 5X Plus',
+  'Fenix 6 / 6S / 6 Pro / 6S Pro / 6X Pro',
   'Fenix 7 / 7S / 7X / 7 Pro / 7S Pro / 7X Pro',
-  'Fenix 8 / 8 Pro / 8 Solar / Fenix E',
-  'Forerunner 245 / 255 / 265 / 745 / 935 / 945 / 955 / 965 / 970',
+  'Fenix 8 (43 mm) / 8 (47 mm) / 8 Pro / 8 Solar / Fenix E',
+  'Forerunner 235 / 630 / 735XT',
+  'Forerunner 245 Music / 255 / 255 Music / 255S / 255S Music / 265 / 265S',
+  'Forerunner 745 / 935 / 945 / 945 LTE / 955 / 965 / 970',
   'Enduro / Enduro 3',
   'Epix 2 / Epix 2 Pro (42/47/51 mm)',
   'Venu 2 / 2S / 2 Plus / 3 / 3S',
+  'Vivoactive HR',
 ];
 ---
 <Base title="El test · Test Álvarez">
@@ -102,7 +106,7 @@ const devices = [
           </table>
         </div>
         <p class="text-sm text-ink/60">
-          Si es tu primer DIPER, elige conservador. Siempre podrás intentar uno más rápido en el siguiente.
+          Si es tu primer test empieza más conservador, es mucho más preferible hacer más vueltas a ritmo bajo.
         </p>
       </div>
     </div>
@@ -195,7 +199,7 @@ const devices = [
           Si grabaste la actividad como FIT/TCX/GPX, súbela al
           {' '}<a href={`${base}analisis`} class="text-accent underline-offset-4 hover:underline">análisis</a>{' '}
           para visualizar la progresión y, sobre todo, para comparar este test con futuros.
-          La utilidad real del DIPER aparece al verlo evolucionar a lo largo de meses.
+          La utilidad real del test aparece al verlo evolucionar a lo largo de meses.
         </p>
       </div>
     </div>
@@ -244,7 +248,7 @@ const devices = [
         <ul class="mt-3 space-y-1.5 text-sm text-ink/80">
           {devices.map((d) => <li>· {d}</li>)}
         </ul>
-        <p class="mt-3 text-xs text-ink/50">Total: 92 dispositivos. Lista completa en la ficha de Connect IQ.</p>
+        <p class="mt-3 text-xs text-ink/50">Total: 54 dispositivos. Lista completa en la ficha de Connect IQ.</p>
       </div>
     </div>
 
