@@ -6,10 +6,10 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Test DIPER-Álvarez: protocolo progresivo de 400 m. App para Garmin y analizador de resultados.' } = Astro.props;
+const { title, description = 'Test Álvarez: protocolo progresivo de 400 m. App para Garmin y analizador de resultados.' } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const nav = [
-  { href: base, label: 'DIPER' },
+  { href: base, label: 'Inicio' },
   { href: `${base}metodo`, label: 'Método' },
   { href: `${base}test`, label: 'El test' },
   { href: `${base}analisis`, label: 'Análisis' },
@@ -30,7 +30,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
   <body class="bg-paper text-ink">
     <header class="sticky top-0 z-20 border-b border-ink/10 bg-paper/90 backdrop-blur">
       <nav class="mx-auto flex max-w-5xl items-baseline justify-between px-6 py-4">
-        <a href={base} class="font-display text-xl tracking-tight">DIPER · Álvarez</a>
+        <a href={base} class="font-display text-xl tracking-tight">Test Álvarez</a>
         <ul class="flex gap-6 text-sm">
           {nav.slice(1).map((item) => {
             const href = item.href.replace(/\/$/, '');
