@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import TrackAnimation from '../components/TrackAnimation';
 const base = import.meta.env.BASE_URL;
 ---
 <Base title="Test Álvarez — El test progresivo de 400 m">
@@ -23,6 +24,10 @@ const base = import.meta.env.BASE_URL;
     </div>
   </section>
 
+  <section class="mb-24">
+    <TrackAnimation client:load />
+  </section>
+
   <section class="mb-24 grid gap-16 md:grid-cols-2">
     <div>
       <h2 class="font-display text-3xl">El test</h2>
@@ -41,12 +46,12 @@ const base = import.meta.env.BASE_URL;
     </div>
 
     <div>
-      <h2 class="font-display text-3xl">Por qué importa</h2>
+      <h2 class="font-display text-3xl">Beneficios</h2>
       <ul class="mt-4 space-y-3 text-ink/80">
-        <li><span class="font-display text-accent">·</span> Un único test de campo, sin laboratorio.</li>
-        <li><span class="font-display text-accent">·</span> Estima tu <em>ritmo sostenible más rápido</em>.</li>
-        <li><span class="font-display text-accent">·</span> Sirve de referencia longitudinal para medir progreso.</li>
-        <li><span class="font-display text-accent">·</span> Expone tu tolerancia al lactato mejor que cualquier test de tirada corta.</li>
+        <li><span class="font-display text-accent">·</span> Sin necesidad de laboratorio ni equipo avanzado.</li>
+        <li><span class="font-display text-accent">·</span> Test de campo, más realista que en cinta.</li>
+        <li><span class="font-display text-accent">·</span> Sirve de referencia para medir tu progreso.</li>
+        <li><span class="font-display text-accent">·</span> Estima tus zonas de entrenamiento, VAM y FC máxima.</li>
       </ul>
     </div>
   </section>
