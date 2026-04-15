@@ -8,6 +8,10 @@ const COMPRESSION = 20;
 const PAUSE_BETWEEN_LOOPS_MS = 3000;
 const PULSE_DURATION_MS = 500;
 
+// HR model: linear monotonic rise across the whole test
+const HR_START = 110;
+const HR_MAX = 190;
+
 // Colors
 const INK = '#111111';
 const ACCENT = '#ff701a';
@@ -113,9 +117,35 @@ function formatPace(sec: number): string {
   return `${m}:${s.toString().padStart(2, '0')}/km`;
 }
 
+function formatTime(sec: number): string {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+function lapTargetSec(lap: number): number {
+  return FIRST_LAP_SEC - (lap - 1) * DEC_SEC;
+}
+
+/** HR as a function of lap + fraction-through-lap. Linear monotonic. */
+function hrAt(lap: number, fraction: number): number {
+  const p = Math.min(1, Math.max(0, (lap - 1 + fraction) / TOTAL_LAPS));
+  return HR_START + p * (HR_MAX - HR_START);
+}
+
 interface PulseState {
   idx: number;
   born: number;
+}
+
+interface LapRow {
+  lap: number;
+  targetSec: number; // nominal lap duration
+  timeSec: number; // elapsed in this lap (ticks live, locks to targetSec on completion)
+  distanceM: number; // 0 → 400 live, locks to 400 on completion
+  currentHr: number;
+  maxHr: number;
+  completed: boolean;
 }
 
 export default function TrackAnimation() {
@@ -130,8 +160,12 @@ export default function TrackAnimation() {
   const [pulses, setPulses] = useState<PulseState[]>([]);
   const [renderTime, setRenderTime] = useState(0);
 
+  // Rows live in a ref — animate() mutates in place, setRenderTime triggers re-render.
+  const rowsRef = useRef<LapRow[]>([]);
+
+  // lap starts at 0 so the first frame (currentLap=1) triggers row creation.
   const stateRef = useRef({
-    lap: 1,
+    lap: 0,
     lastQuarter: -1,
     done: false,
     doneAt: 0,
@@ -143,7 +177,8 @@ export default function TrackAnimation() {
   }, []);
 
   const reset = useCallback(() => {
-    stateRef.current = { lap: 1, lastQuarter: -1, done: false, doneAt: 0 };
+    stateRef.current = { lap: 0, lastQuarter: -1, done: false, doneAt: 0 };
+    rowsRef.current = [];
     setTargetSec(FIRST_LAP_SEC);
     setDotPos(trackPoint(0));
     setPulses([]);
@@ -185,21 +220,62 @@ export default function TrackAnimation() {
         }
         timeAccum += dur;
         if (l === TOTAL_LAPS) {
+          // Finalize last row
+          const rows = rowsRef.current;
+          if (rows.length > 0) {
+            const last = rows[rows.length - 1];
+            last.completed = true;
+            last.timeSec = last.targetSec;
+            last.distanceM = 400;
+            last.currentHr = last.maxHr;
+          }
           st.done = true;
           st.doneAt = now;
           setDotPos(trackPoint(0));
+          setRenderTime(now);
           rafRef.current = requestAnimationFrame(animate);
           return;
         }
       }
 
       setDotPos(trackPoint(fraction));
-      setRenderTime(now); // trigger re-render for pulse animation
+      setRenderTime(now); // trigger re-render for pulse animation + row updates
 
       if (currentLap !== st.lap) {
+        // Finalize previous row (if any) and push a new one for the lap just starting.
+        const rows = rowsRef.current;
+        if (rows.length > 0) {
+          const last = rows[rows.length - 1];
+          last.completed = true;
+          last.timeSec = last.targetSec;
+          last.distanceM = 400;
+          last.currentHr = last.maxHr;
+        }
+        const t = lapTargetSec(currentLap);
+        const hr = hrAt(currentLap, 0);
+        rows.push({
+          lap: currentLap,
+          targetSec: t,
+          timeSec: 0,
+          distanceM: 0,
+          currentHr: hr,
+          maxHr: hr,
+          completed: false,
+        });
         st.lap = currentLap;
         st.lastQuarter = -1;
-        setTargetSec(FIRST_LAP_SEC - (currentLap - 1) * DEC_SEC);
+        setTargetSec(t);
+      } else {
+        // Update in-progress row live
+        const rows = rowsRef.current;
+        if (rows.length > 0) {
+          const last = rows[rows.length - 1];
+          const hr = hrAt(currentLap, fraction);
+          last.timeSec = fraction * last.targetSec;
+          last.distanceM = Math.min(400, fraction * 400);
+          last.currentHr = hr;
+          if (hr > last.maxHr) last.maxHr = hr;
+        }
       }
 
       // Quarter detection — fire pulse each time the runner crosses a 100m mark
@@ -251,8 +327,12 @@ export default function TrackAnimation() {
     })
     .filter(Boolean) as (PulseState & { r: number; opacity: number })[];
 
+  const rows = rowsRef.current;
+
   return (
-    <div ref={containerRef} className="mx-auto max-w-3xl">
+    <div ref={containerRef} className="mx-auto max-w-5xl">
+      <div className="grid gap-8 md:grid-cols-[3fr_2fr] items-center">
+        <div>
       <svg
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         width="100%"
@@ -370,6 +450,62 @@ export default function TrackAnimation() {
           {`−${DEC_SEC}s / vuelta`}
         </text>
       </svg>
+        </div>
+
+        {/* Live laps table */}
+        <div className="overflow-x-auto">
+          <table
+            className="w-full text-sm"
+            style={{ fontVariantNumeric: 'tabular-nums' }}
+          >
+            <thead>
+              <tr className="border-b border-ink/15 text-left text-[10px] uppercase tracking-wider text-ink/50">
+                <th className="py-2 pr-2 font-normal">Vta</th>
+                <th className="py-2 pr-2 font-normal">Tiempo</th>
+                <th className="py-2 pr-2 font-normal">Dist.</th>
+                <th className="py-2 pr-2 font-normal">Ritmo</th>
+                <th className="py-2 font-normal">FC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="py-6 text-center text-xs text-ink/40">
+                    Empezando…
+                  </td>
+                </tr>
+              )}
+              {rows.map((row) => {
+                const isCurrent = !row.completed;
+                return (
+                  <tr
+                    key={row.lap}
+                    className={`border-b border-ink/5 ${
+                      isCurrent ? 'text-ink' : 'text-ink/70'
+                    }`}
+                  >
+                    <td
+                      className={`py-1.5 pr-2 font-display ${
+                        isCurrent ? 'text-accent' : ''
+                      }`}
+                    >
+                      {row.lap}
+                    </td>
+                    <td className="py-1.5 pr-2">{formatTime(row.timeSec)}</td>
+                    <td className="py-1.5 pr-2">
+                      {Math.round(row.distanceM)} m
+                    </td>
+                    <td className="py-1.5 pr-2 text-ink/80">
+                      {formatPace(row.targetSec)}
+                    </td>
+                    <td className="py-1.5">{Math.round(row.maxHr)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
