@@ -1,4 +1,4 @@
-// Protocol calculations for the DIPER-Álvarez test.
+// Protocol calculations for the Test Álvarez.
 // Each lap is 400 m; each lap's target is 4 s faster than the previous.
 
 export function lapTargetSeconds(firstLapSec: number, lapNumber: number): number {
