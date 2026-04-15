@@ -22,3 +22,11 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Garmin Connect IQ build artifacts and signing keys
+garmin-app/bin/
+*.der
+*.pem
+
+# Claude Code workspace config
+.claude/
