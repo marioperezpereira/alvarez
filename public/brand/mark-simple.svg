@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Background -->
+  <rect width="128" height="128" rx="20" fill="#111111"/>
+
+  <!-- Subtle stadium track behind the letter -->
+  <g stroke="#faf7f2" stroke-width="1.5" fill="none" opacity="0.18">
+    <!-- Outer lane -->
+    <path d="M 36 56 L 92 56 A 24 24 0 0 1 92 104 L 36 104 A 24 24 0 0 1 36 56 Z"/>
+    <!-- Inner lane -->
+    <path d="M 36 66 L 92 66 A 14 14 0 0 1 92 94 L 36 94 A 14 14 0 0 1 36 66 Z"/>
+  </g>
+
+  <!-- Capital A — serif, drawn as a path -->
+  <path d="M 36 100 L 58 28 L 70 28 L 92 100 L 80 100 L 74.5 82 L 53.5 82 L 48 100 Z M 56 74 L 72 74 L 64 48 Z"
+        fill="#faf7f2"/>
+
+  <!-- Acute accent = runner dot -->
+  <circle cx="70" cy="18" r="7" fill="#ff701a"/>
+</svg>

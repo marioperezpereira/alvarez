@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <!-- Background -->
+  <rect width="500" height="500" rx="64" fill="#111111"/>
+
+  <!-- Stadium track — multiple lanes behind the letter -->
+  <g fill="none" stroke="#faf7f2">
+    <!-- Track surface band (soft) -->
+    <path d="M 140 220 L 360 220 A 90 90 0 0 1 360 400 L 140 400 A 90 90 0 0 1 140 220 Z"
+          stroke="#faf7f2" stroke-width="70" opacity="0.04"/>
+
+    <!-- Lane lines -->
+    <g opacity="0.22">
+      <path d="M 140 185 L 360 185 A 125 125 0 0 1 360 435 L 140 435 A 125 125 0 0 1 140 185 Z" stroke-width="1.2"/>
+      <path d="M 140 197 L 360 197 A 113 113 0 0 1 360 423 L 140 423 A 113 113 0 0 1 140 197 Z" stroke-width="0.6"/>
+      <path d="M 140 209 L 360 209 A 101 101 0 0 1 360 411 L 140 411 A 101 101 0 0 1 140 209 Z" stroke-width="0.6"/>
+      <path d="M 140 221 L 360 221 A 89 89 0 0 1 360 399 L 140 399 A 89 89 0 0 1 140 221 Z" stroke-width="0.6"/>
+      <path d="M 140 233 L 360 233 A 77 77 0 0 1 360 387 L 140 387 A 77 77 0 0 1 140 233 Z" stroke-width="0.6"/>
+      <path d="M 140 245 L 360 245 A 65 65 0 0 1 360 375 L 140 375 A 65 65 0 0 1 140 245 Z" stroke-width="0.6"/>
+      <path d="M 140 257 L 360 257 A 53 53 0 0 1 360 363 L 140 363 A 53 53 0 0 1 140 257 Z" stroke-width="1.2"/>
+    </g>
+
+    <!-- Start/finish line -->
+    <line x1="140" y1="185" x2="140" y2="257" stroke="#faf7f2" stroke-width="1.5" opacity="0.3"/>
+  </g>
+
+  <!-- Capital A — serif, drawn as a path, sits on/through the track -->
+  <path d="M 140 400 L 228 112 L 272 112 L 360 400 L 316 400 L 294 326 L 206 326 L 184 400 Z M 218 288 L 282 288 L 250 180 Z"
+        fill="#faf7f2"/>
+
+  <!-- Acute accent = runner dot, positioned on the track path -->
+  <circle cx="272" cy="72" r="24" fill="#ff701a"/>
+</svg>
