@@ -4,17 +4,17 @@ import TrackAnimation from '../components/TrackAnimation';
 const base = import.meta.env.BASE_URL;
 ---
 <Base title="Test Álvarez — El test progresivo de 400 m">
-  <section class="mb-24">
+  <section class="mb-24 md:text-center">
     <p class="mb-6 text-sm uppercase tracking-widest text-ink/50">Protocolo incremental continuo · 400 m</p>
     <h1 class="font-display text-5xl leading-[1.05] tracking-tight md:text-7xl">
       Test <span class="text-accent">Álvarez</span>
     </h1>
-    <p class="mt-8 max-w-xl text-lg text-ink/80">
+    <p class="mt-8 max-w-xl text-lg text-ink/80 md:mx-auto">
       Un test de campo en pista para valorar el umbral, la velocidad aeróbica máxima y la tolerancia
       al esfuerzo progresivo. Vueltas de 400 m con decremento fijo de 4 s por vuelta, sin pausas,
       hasta el fallo.
     </p>
-    <div class="mt-10 flex flex-wrap gap-4 text-sm">
+    <div class="mt-10 flex flex-wrap gap-4 text-sm md:justify-center">
       <a href={`${base}test`} class="rounded-full bg-accent px-5 py-2 text-paper hover:opacity-90 transition">
         Cómo hacer el test →
       </a>
