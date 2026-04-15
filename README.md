@@ -1,4 +1,4 @@
-# DIPER · Álvarez
+# Test Álvarez
 
 Sitio web del test progresivo DIPER en su modificación por Roberto Álvarez sobre el protocolo original de Mariano García-Verdugo.
 
