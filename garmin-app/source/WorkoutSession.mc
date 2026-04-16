@@ -247,19 +247,25 @@ class WorkoutSession {
         }
     }
 
+    // Returns true if a quarter tone fired on this tick, so the caller can
+     // force an immediate display repaint (keeps the on-screen seconds in
+     // sync with the audible beep).
     function checkQuarterTones(elapsedMs) {
         var targetMs = getCurrentTarget() * 1000;
         if (targetMs <= 0) {
-            return;
+            return false;
         }
         var quarterMs = targetMs / 4;
+        var fired = false;
 
         for (var q = 1; q <= 3; q++) {
             if (elapsedMs >= q * quarterMs && quartersPlayed < q) {
                 quartersPlayed = q;
                 playQuarterTone();
+                fired = true;
             }
         }
+        return fired;
     }
 
     // Receives a pre-fetched ActivityInfo to avoid redundant allocations.

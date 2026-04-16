@@ -57,7 +57,7 @@ class ActivityView extends WatchUi.View {
             // Single ActivityInfo fetch per tick
             var info = $.workout.getInfo();
             $.workout.sampleSensors(info);
-            $.workout.checkQuarterTones(elapsedMs);
+            var quarterFired = $.workout.checkQuarterTones(elapsedMs);
             $.workout.checkAutoLap(info);
 
             // Update cached values for display.
@@ -88,6 +88,15 @@ class ActivityView extends WatchUi.View {
                 var targetSec = $.workout.getCurrentTarget();
                 cachedTarget = "TARGET " + WorkoutSession.formatTime(targetSec);
                 cachedTargetMs = targetSec * 1000;
+            }
+
+            // If a quarter tone just fired, force an immediate repaint so
+            // the displayed seconds match the audible beep. Otherwise the
+            // 1Hz display refresh can lag up to ~750ms behind the 4Hz tick
+            // that triggered the tone, making the metronome look erratic.
+            if (quarterFired) {
+                tickCounter = 0;
+                WatchUi.requestUpdate();
             }
         }
 
