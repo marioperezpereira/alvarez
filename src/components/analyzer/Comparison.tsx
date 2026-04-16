@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { StoredTest } from '../../lib/types';
 import { formatPace } from '../../lib/gpxParser';
+import { isIncompleteLap } from '../../lib/lapStats';
 
 const COLORS = ['#ff701a', '#111111', '#1f6feb', '#16a34a', '#6d28d9'];
 
@@ -9,8 +10,12 @@ export default function Comparison({ tests, tolerance = 2 }: { tests: StoredTest
   const { rows, tickVals } = useMemo(() => {
     const groups = new Map<number, Record<string, number>>();
     tests.forEach((t, idx) => {
-      t.data.laps.forEach((lap) => {
+      const laps = t.data.laps;
+      const lastIdx = laps.length - 1;
+      laps.forEach((lap, i) => {
         if (typeof lap.pace !== 'number' || lap.pace <= 0) return;
+        // Skip the last lap if it's incomplete (failure partial lap)
+        if (i === lastIdx && isIncompleteLap(lap.distance)) return;
         let key: number | null = null;
         for (const k of groups.keys()) {
           if (Math.abs(k - lap.pace) <= tolerance) { key = k; break; }

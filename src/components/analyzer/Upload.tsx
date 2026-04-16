@@ -43,24 +43,30 @@ export default function Upload({ onParsed }: Props) {
     }
   }
 
-  async function loadSample() {
+  async function loadSamples() {
     setError(null);
     setLoading(true);
     try {
       const base = import.meta.env.BASE_URL || '/';
-      const res = await fetch(`${base}samples/sample_diper.tcx`);
-      const text = await res.text();
-      const data = parseGpxData(text);
-      const test: StoredTest = {
-        id: `t-${Date.now()}-sample`,
-        label: 'Ejemplo',
-        date: data.summary.testDate,
-        filename: 'sample_diper.tcx',
-        data,
-      };
-      onParsed(test);
+      const samples = [
+        { file: 'sample_diper_2.tcx', label: 'Test septiembre 2024' },
+        { file: 'sample_diper.tcx', label: 'Test noviembre 2024' },
+      ];
+      for (const s of samples) {
+        const res = await fetch(`${base}samples/${s.file}`);
+        const text = await res.text();
+        const data = parseGpxData(text);
+        const test: StoredTest = {
+          id: `t-${Date.now()}-${s.file.replace('.tcx', '')}`,
+          label: s.label,
+          date: data.summary.testDate,
+          filename: s.file,
+          data,
+        };
+        onParsed(test);
+      }
     } catch {
-      setError('No se pudo cargar el ejemplo.');
+      setError('No se pudieron cargar los ejemplos.');
     } finally {
       setLoading(false);
     }
@@ -101,10 +107,10 @@ export default function Upload({ onParsed }: Props) {
       <div className="mt-3 flex items-center justify-between text-sm">
         <button
           type="button"
-          onClick={loadSample}
+          onClick={loadSamples}
           className="text-ink/60 underline-offset-4 hover:text-accent hover:underline"
         >
-          Probar con un archivo de ejemplo
+          Probar con dos tests de ejemplo
         </button>
         {error && <span className="text-accent">{error}</span>}
       </div>
