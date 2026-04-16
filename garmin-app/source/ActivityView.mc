@@ -81,7 +81,9 @@ class ActivityView extends WatchUi.View {
         var modeStr = ($.workout.mode == $.MODE_MANUAL) ? "MANUAL" : "GPS";
 
         // --- Top: LAP number and mode ---
-        var topY = h * 8 / 100;
+        // Layout centered for round displays (FR970 454×454):
+        // content block spans ~15%–80%, visual center at ~47%.
+        var topY = h * 15 / 100;
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, topY, Graphics.FONT_SMALL,
             "LAP " + lapNum + "  " + modeStr,
@@ -89,7 +91,7 @@ class ActivityView extends WatchUi.View {
 
         // --- Center: Elapsed time (large) ---
         var elapsedStr = WorkoutSession.formatElapsedMs(elapsedMs);
-        var centerY = h * 22 / 100;
+        var centerY = h * 30 / 100;
 
         // Color: white if under target, red if over
         if (elapsedMs > targetMs && targetMs > 0) {
@@ -102,7 +104,7 @@ class ActivityView extends WatchUi.View {
             Graphics.TEXT_JUSTIFY_CENTER);
 
         // --- Below center: TARGET ---
-        var targetY = h * 55 / 100;
+        var targetY = h * 60 / 100;
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, targetY, Graphics.FONT_MEDIUM,
             "TARGET " + WorkoutSession.formatTime(targetSec),
@@ -117,7 +119,7 @@ class ActivityView extends WatchUi.View {
         var barH = h * 3 / 100;
         if (barH < 6) { barH = 6; }
         var barX = (w - barW) / 2;
-        var barY = h * 68 / 100;
+        var barY = h * 76 / 100;
 
         // Background
         dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
