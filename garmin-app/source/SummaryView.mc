@@ -24,9 +24,9 @@ class SummaryView extends WatchUi.View {
     }
 
     function onLayout(dc as Graphics.Dc) as Void {
-        if (Graphics has :FONT_NUMBER_THAI_HOT) {
-            _heroFont = Graphics.FONT_NUMBER_THAI_HOT;
-        } else if (Graphics has :FONT_NUMBER_HOT) {
+        // NUMBER_HOT is plenty big (~90px on FR970) and leaves room for the
+        // label + verdict + totals. THAI_HOT is too tall and collides.
+        if (Graphics has :FONT_NUMBER_HOT) {
             _heroFont = Graphics.FONT_NUMBER_HOT;
         } else {
             _heroFont = Graphics.FONT_NUMBER_MEDIUM;
@@ -119,49 +119,50 @@ class SummaryView extends WatchUi.View {
             }
         }
 
-        // Huge number — completed laps
-        var numY = h * 28 / 100;
+        // Huge number — completed laps. Use VCENTER so we can anchor it
+        // precisely at 35% of the screen height without computing font
+        // metrics.
+        var numY = h * 35 / 100;
         dc.setColor($.COLOR_ACCENT, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, numY, _heroFont,
-            completed.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+            completed.format("%d"),
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         // Label under the number
-        var numH = dc.getFontHeight(_heroFont);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, numY + numH - 4, Graphics.FONT_XTINY,
+        dc.drawText(w / 2, h * 58 / 100, Graphics.FONT_XTINY,
             (completed == 1) ? "VUELTA COMPLETADA" : "VUELTAS COMPLETADAS",
             Graphics.TEXT_JUSTIFY_CENTER);
 
         // Verdict line
-        var verdictY = h * 62 / 100;
+        var verdictY = h * 68 / 100;
         if (failedAtLap > 0) {
             dc.setColor($.COLOR_FAIL, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, verdictY, Graphics.FONT_SMALL,
+            dc.drawText(w / 2, verdictY, Graphics.FONT_XTINY,
                 "Fallo en L" + failedAtLap, Graphics.TEXT_JUSTIFY_CENTER);
         } else {
             dc.setColor($.COLOR_PASS, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, verdictY, Graphics.FONT_SMALL,
+            dc.drawText(w / 2, verdictY, Graphics.FONT_XTINY,
                 "Completado", Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Totals
+        // Totals — combine into one line if there's no distance data
         var totalMs = WorkoutSession.totalElapsedMs(laps);
         var totalDist = WorkoutSession.totalDistance(laps);
         var maxHr = WorkoutSession.sessionMaxHr(laps);
 
-        var statsY = h * 76 / 100;
+        var statsY = h * 78 / 100;
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
 
-        var distStr = (totalDist > 0)
-            ? (totalDist / 1000.0).format("%.2f") + " km · "
-            : "";
-        dc.drawText(w / 2, statsY, Graphics.FONT_XTINY,
-            distStr + WorkoutSession.formatElapsedMs(totalMs),
+        var statsStr = WorkoutSession.formatElapsedMs(totalMs);
+        if (totalDist > 0) {
+            statsStr = (totalDist / 1000.0).format("%.2f") + " km · " + statsStr;
+        }
+        dc.drawText(w / 2, statsY, Graphics.FONT_XTINY, statsStr,
             Graphics.TEXT_JUSTIFY_CENTER);
 
         if (maxHr > 0) {
-            dc.drawText(w / 2, statsY + dc.getFontHeight(Graphics.FONT_XTINY) + 2,
-                Graphics.FONT_XTINY,
+            dc.drawText(w / 2, h * 85 / 100, Graphics.FONT_XTINY,
                 "HR máx " + maxHr.format("%d"),
                 Graphics.TEXT_JUSTIFY_CENTER);
         }
@@ -270,7 +271,7 @@ class SummaryView extends WatchUi.View {
         var h = dc.getHeight();
         var laps = $.workout.lapHistory;
 
-        var topY = h * 10 / 100;
+        var topY = h * 8 / 100;
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, topY, Graphics.FONT_XTINY,
             "PROGRESIÓN", Graphics.TEXT_JUSTIFY_CENTER);
@@ -282,17 +283,19 @@ class SummaryView extends WatchUi.View {
             return;
         }
 
-        // Chart areas — two vertically stacked bands
+        // Chart areas — two vertically stacked bands.
+        // Using timeMs instead of avgPace so manual-mode tests (no GPS,
+        // where avgPace = 0) still render meaningful bars.
         var chartX = w * 14 / 100;
         var chartW = w * 72 / 100;
-        var bandH = h * 22 / 100;
+        var bandH = h * 18 / 100;
 
-        var paceY = h * 26 / 100;
-        var hrY = h * 60 / 100;
+        var paceY = h * 32 / 100;
+        var hrY = h * 66 / 100;
 
-        _drawBarChart(dc, "Ritmo / vuelta", chartX, paceY, chartW, bandH,
-            laps, "avgPace", true);
-        _drawBarChart(dc, "HR máx / vuelta", chartX, hrY, chartW, bandH,
+        _drawBarChart(dc, "TIEMPO / VUELTA", chartX, paceY, chartW, bandH,
+            laps, "timeMs", true);
+        _drawBarChart(dc, "HR MÁX / VUELTA", chartX, hrY, chartW, bandH,
             laps, "maxHr", false);
     }
 
@@ -303,10 +306,11 @@ class SummaryView extends WatchUi.View {
     hidden function _drawBarChart(dc, label, x, y, w, h, laps, field, isPace) {
         var baseColor = isPace ? $.COLOR_ACCENT : Graphics.COLOR_WHITE;
         var invertScale = isPace;
-        // Label above
+
+        // Label centered above the chart band
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y - dc.getFontHeight(Graphics.FONT_XTINY) - 1,
-            Graphics.FONT_XTINY, label, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(x + w / 2, y - dc.getFontHeight(Graphics.FONT_XTINY) - 2,
+            Graphics.FONT_XTINY, label, Graphics.TEXT_JUSTIFY_CENTER);
 
         // Find min/max of field, skipping null/zero values
         var vmin = -1;
