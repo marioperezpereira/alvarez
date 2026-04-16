@@ -99,14 +99,10 @@ class ActivityView extends WatchUi.View {
             WatchUi.requestUpdate();
         }
 
-        // Backlight every ~3s (12 ticks at 4Hz)
-        backlightCounter++;
-        if (backlightCounter >= 12) {
-            backlightCounter = 0;
-            if (Attention has :backlight) {
-                Attention.backlight(true);
-            }
-        }
+        // NOTE: Previously pulsed Attention.backlight(true) every ~3s to keep
+        // the screen awake, but that call is deprecated on modern CIQ (FR970)
+        // and is the prime suspect for the ~50s crash. The FIT recording
+        // session already keeps the watch from sleeping while active.
     }
 
     function onUpdate(dc as Graphics.Dc) as Void {
