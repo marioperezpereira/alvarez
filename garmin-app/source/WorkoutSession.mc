@@ -36,6 +36,59 @@ class WorkoutSession {
         return firstLapTarget - (currentLap - 1) * 4;
     }
 
+    // Target (seconds) for an arbitrary lap number
+    function targetForLap(lapNum) {
+        return firstLapTarget - (lapNum - 1) * 4;
+    }
+
+    // Did this stored lap finish under its target?
+    function didPassLap(lap) {
+        var target = targetForLap(lap["lapNum"]);
+        return (lap["timeMs"] / 1000) <= target;
+    }
+
+    // Flag laps that were never fully completed (user failed mid-lap).
+    // In GPS mode this means distance < half of 400m. In manual mode
+    // distance can be 0 and we fall back to the time vs target heuristic:
+    // a manual lap always gets pressed, so it's only incomplete if the
+    // timer was stopped without pressing, which doesn't happen — return
+    // false in that case.
+    function isIncompleteLap(lap) {
+        var dist = lap["distance"];
+        if (dist != null && dist > 0.0 && dist < 200.0) {
+            return true;
+        }
+        return false;
+    }
+
+    // --- Session-level aggregates over lapHistory ---
+
+    static function totalElapsedMs(history) {
+        var total = 0;
+        for (var i = 0; i < history.size(); i++) {
+            total += history[i]["timeMs"];
+        }
+        return total;
+    }
+
+    static function totalDistance(history) {
+        var total = 0.0;
+        for (var i = 0; i < history.size(); i++) {
+            var d = history[i]["distance"];
+            if (d != null) { total += d; }
+        }
+        return total;
+    }
+
+    static function sessionMaxHr(history) {
+        var max = 0;
+        for (var i = 0; i < history.size(); i++) {
+            var h = history[i]["maxHr"];
+            if (h != null && h > max) { max = h; }
+        }
+        return max;
+    }
+
     // Format seconds to "M:SS" string
     static function formatTime(seconds) {
         if (seconds < 0) {

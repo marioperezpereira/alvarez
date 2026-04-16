@@ -152,9 +152,10 @@ class PauseMenuLegacyDelegate extends WatchUi.MenuInputDelegate {
         } else if (item == :end) {
             $.workout.stopWorkout();
             // switchToView replaces the pause menu with the summary.
+            var summary = new SummaryView();
             WatchUi.switchToView(
-                new SummaryView(),
-                new SummaryDelegate(),
+                summary,
+                new SummaryDelegate(summary),
                 WatchUi.SLIDE_RIGHT
             );
         }

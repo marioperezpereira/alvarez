@@ -73,7 +73,8 @@ class PauseMenuDelegate extends WatchUi.Menu2InputDelegate {
         } else if (id.equals("end")) {
             $.workout.stopWorkout();
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-            WatchUi.switchToView(new SummaryView(), new SummaryDelegate(), WatchUi.SLIDE_RIGHT);
+            var summary = new SummaryView();
+            WatchUi.switchToView(summary, new SummaryDelegate(summary), WatchUi.SLIDE_RIGHT);
         }
     }
 
