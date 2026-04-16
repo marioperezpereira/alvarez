@@ -21,9 +21,11 @@ class ActivityView extends WatchUi.View {
             bigFont = Graphics.FONT_NUMBER_HOT;
         }
 
-        // Start a timer to refresh the display at ~10 Hz
+        // Refresh at 4 Hz — smooth enough for M:SS display and progress bar,
+        // and cuts per-tick object allocations (ActivityInfo, Strings) to 40%
+        // of the previous 10 Hz rate, preventing GC pressure / OOM on long tests.
         updateTimer = new Timer.Timer();
-        updateTimer.start(method(:onTimer), 100, true);
+        updateTimer.start(method(:onTimer), 250, true);
         backlightCounter = 0;
     }
 
@@ -38,19 +40,23 @@ class ActivityView extends WatchUi.View {
         if (!$.workout.isPaused) {
             var elapsedMs = $.workout.getElapsedMs();
 
+            // Single ActivityInfo fetch per tick — avoids redundant allocations
+            // that caused GC pressure and OOM crashes on long tests (~2-3 min).
+            var info = $.workout.getInfo();
+
             // Sample HR and speed for lap max tracking
-            $.workout.sampleSensors();
+            $.workout.sampleSensors(info);
 
             // Fire quarter metronome tones
             $.workout.checkQuarterTones(elapsedMs);
 
             // In GPS mode, check for auto-lap
-            $.workout.checkAutoLap();
+            $.workout.checkAutoLap(info);
         }
 
-        // Keep screen awake — refresh backlight every ~3 seconds
+        // Keep screen awake — refresh backlight every ~3 seconds (at 4Hz: 12 ticks ≈ 3s)
         backlightCounter++;
-        if (backlightCounter >= 30) {
+        if (backlightCounter >= 12) {
             backlightCounter = 0;
             if (Attention has :backlight) {
                 Attention.backlight(true);

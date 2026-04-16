@@ -155,19 +155,24 @@ class WorkoutSession {
         return 0.0;
     }
 
-    // Call on each timer tick to track max HR and max speed for current lap
-    function sampleSensors() {
-        if (!isRunning || isPaused) {
+    // Fetch ActivityInfo once per timer tick. Callers (sampleSensors,
+    // checkAutoLap) receive this instead of calling getActivityInfo()
+    // themselves, cutting per-tick allocations in half.
+    function getInfo() {
+        return Activity.getActivityInfo();
+    }
+
+    // Call on each timer tick to track max HR and max speed for current lap.
+    // Receives a pre-fetched ActivityInfo to avoid redundant allocations.
+    function sampleSensors(info) {
+        if (!isRunning || isPaused || info == null) {
             return;
         }
-        var info = Activity.getActivityInfo();
-        if (info != null) {
-            if (info.currentHeartRate != null && info.currentHeartRate > lapMaxHr) {
-                lapMaxHr = info.currentHeartRate;
-            }
-            if (info.currentSpeed != null && info.currentSpeed > lapMaxSpeed) {
-                lapMaxSpeed = info.currentSpeed;
-            }
+        if (info.currentHeartRate != null && info.currentHeartRate > lapMaxHr) {
+            lapMaxHr = info.currentHeartRate;
+        }
+        if (info.currentSpeed != null && info.currentSpeed > lapMaxSpeed) {
+            lapMaxSpeed = info.currentSpeed;
         }
     }
 
@@ -257,39 +262,51 @@ class WorkoutSession {
         }
     }
 
-    function checkAutoLap() {
+    // Receives a pre-fetched ActivityInfo to avoid redundant allocations.
+    function checkAutoLap(info) {
         if (mode != $.MODE_GPS || !isRunning) {
             return;
         }
-        var lapDist = getCurrentLapDistance();
+        var lapDist = 0.0;
+        if (info != null && info.elapsedDistance != null) {
+            lapDist = info.elapsedDistance - lapDistanceAtStart;
+        }
         if (lapDist >= 400.0) {
             completeLap();
         }
     }
 
     function playQuarterTone() {
-        if (Attention has :playTone) {
-            Attention.playTone(Attention.TONE_ALERT_HI);
-        }
-        if (Attention has :vibrate) {
-            Attention.vibrate([
-                new Attention.VibeProfile(100, 300)
-            ]);
+        try {
+            if (Attention has :playTone) {
+                Attention.playTone(Attention.TONE_ALERT_HI);
+            }
+            if (Attention has :vibrate) {
+                Attention.vibrate([
+                    new Attention.VibeProfile(100, 300)
+                ]);
+            }
+        } catch (e) {
+            // Swallow — some devices throw when audio/haptic system is busy
         }
     }
 
     function playLapTone() {
-        if (Attention has :playTone) {
-            Attention.playTone(Attention.TONE_LAP);
-        }
-        if (Attention has :vibrate) {
-            Attention.vibrate([
-                new Attention.VibeProfile(100, 300),
-                new Attention.VibeProfile(0, 100),
-                new Attention.VibeProfile(100, 300),
-                new Attention.VibeProfile(0, 100),
-                new Attention.VibeProfile(100, 300)
-            ]);
+        try {
+            if (Attention has :playTone) {
+                Attention.playTone(Attention.TONE_LAP);
+            }
+            if (Attention has :vibrate) {
+                Attention.vibrate([
+                    new Attention.VibeProfile(100, 300),
+                    new Attention.VibeProfile(0, 100),
+                    new Attention.VibeProfile(100, 300),
+                    new Attention.VibeProfile(0, 100),
+                    new Attention.VibeProfile(100, 300)
+                ]);
+            }
+        } catch (e) {
+            // Swallow — some devices throw when audio/haptic system is busy
         }
     }
 
