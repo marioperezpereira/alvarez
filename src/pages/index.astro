@@ -22,6 +22,12 @@ const base = import.meta.env.BASE_URL;
         El método →
       </a>
     </div>
+    <p class="mt-6 text-xs uppercase tracking-widest text-ink/40 md:mx-auto">
+      <span class="inline-flex items-center gap-2">
+        <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+        App oficial para Garmin · 50+ relojes compatibles
+      </span>
+    </p>
   </section>
 
   <section class="mb-24">
@@ -82,17 +88,23 @@ const base = import.meta.env.BASE_URL;
     </ol>
   </section>
 
-  <section class="mb-24 grid gap-8 md:grid-cols-2">
+  <section class="mb-24 grid gap-8 md:grid-cols-3">
     <a href={`${base}test`} class="group block rounded border border-ink/10 bg-white/40 p-8 hover:border-ink/30 transition">
-      <div class="text-xs uppercase tracking-widest text-ink/50">Antes y durante el test</div>
-      <h3 class="mt-2 font-display text-3xl">Cómo hacer el test</h3>
-      <p class="mt-3 text-ink/70">Instrucciones completas paso a paso, tabla de tiempos por vuelta y, al final, una app para Garmin que automatiza el cronometraje si quieres.</p>
+      <div class="text-xs uppercase tracking-widest text-ink/50">Antes del test</div>
+      <h3 class="mt-2 font-display text-3xl">Cómo hacerlo</h3>
+      <p class="mt-3 text-ink/70">Instrucciones paso a paso, tabla de tiempos por vuelta y cómo elegir tu primera vuelta.</p>
       <p class="mt-6 text-sm text-accent group-hover:underline">Leer las instrucciones →</p>
     </a>
+    <a href={`${base}test#app`} class="group block rounded border-2 border-accent/30 bg-accent/5 p-8 hover:border-accent transition">
+      <div class="text-xs uppercase tracking-widest text-accent">Durante · Garmin</div>
+      <h3 class="mt-2 font-display text-3xl">Ponlo en tu reloj</h3>
+      <p class="mt-3 text-ink/70">App oficial para Forerunner, Fenix, Venu y más. Metrónomo por cuartos, autolap y grabación FIT.</p>
+      <p class="mt-6 text-sm text-accent group-hover:underline">Ver la app →</p>
+    </a>
     <a href={`${base}analisis`} class="group block rounded border border-ink/10 bg-white/40 p-8 hover:border-ink/30 transition">
-      <div class="text-xs uppercase tracking-widest text-ink/50">Después del test</div>
+      <div class="text-xs uppercase tracking-widest text-ink/50">Después</div>
       <h3 class="mt-2 font-display text-3xl">Análisis</h3>
-      <p class="mt-3 text-ink/70">Sube tu TCX/GPX, visualiza ritmo y pulso por vuelta, compara tests entre sí. Todo en tu navegador.</p>
+      <p class="mt-3 text-ink/70">Sube tu TCX/GPX, visualiza ritmo y pulso por vuelta, compara tests entre sí.</p>
       <p class="mt-6 text-sm text-accent group-hover:underline">Abrir análisis →</p>
     </a>
   </section>

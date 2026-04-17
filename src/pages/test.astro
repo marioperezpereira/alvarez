@@ -23,8 +23,9 @@ const devices = [
   </h1>
   <p class="mt-6 max-w-2xl text-lg text-ink/80">
     Sólo necesitas una pista de 400 m, un cronómetro y honestidad para llegar al fallo.
-    Estas son las instrucciones completas. Más abajo, una app de Garmin que automatiza el cronometraje
-    y el metrónomo si quieres facilitarte el trabajo.
+    Estas son las instrucciones completas. Si tienes un reloj Garmin compatible, nuestra
+    <a href="#app" class="text-accent underline-offset-4 hover:underline">app oficial</a>
+    te quita el cronometraje y el metrónomo de encima.
   </p>
 
   <!-- 1. Material -->
@@ -40,6 +41,67 @@ const devices = [
         <p><strong>Opcional pero útil:</strong> un compañero que te cante los tiempos en cada paso de cuarto (100 m, 200 m, 300 m), o una app que actúe como metrónomo. Sin ello, tendrás que vigilar tú mismo el reloj de cuarto en cuarto.</p>
       </div>
     </div>
+  </section>
+
+  <!-- App como atajo recomendado — sirve de respuesta a "Material" -->
+  <section id="app" class="mt-20 rounded-lg border-2 border-accent/30 bg-accent/5 p-8 md:p-12">
+    <p class="text-xs uppercase tracking-widest text-accent">Atajo recomendado</p>
+    <h2 class="mt-1 font-display text-4xl">App para Garmin</h2>
+    <p class="mt-4 max-w-2xl text-ink/80">
+      Si tienes un reloj Garmin compatible, <em>Alvarez — Diper</em> ejecuta todo el protocolo por ti:
+      calcula el objetivo de cada vuelta, emite un tono cada cuarto de 400 m como metrónomo,
+      marca los pasos de vuelta y graba la actividad en FIT estándar. Con ella, el resto de estas
+      instrucciones se reduce a elegir tu primera vuelta y correr.
+    </p>
+
+    <div class="mt-10 grid gap-8 md:grid-cols-3">
+      <figure>
+        <img src={`${base}images/screen_menu.png`} alt="Menú principal" class="w-full rounded border border-ink/10" />
+        <figcaption class="mt-2 text-sm text-ink/60">Fija tu primera vuelta y modo antes de empezar.</figcaption>
+      </figure>
+      <figure>
+        <img src={`${base}images/screen_activity.png`} alt="Pantalla de actividad" class="w-full rounded border border-ink/10" />
+        <figcaption class="mt-2 text-sm text-ink/60">Tiempo grande, objetivo visible, barra con marcas de cuarto.</figcaption>
+      </figure>
+      <figure>
+        <img src={`${base}images/screen_summary.png`} alt="Resumen" class="w-full rounded border border-ink/10" />
+        <figcaption class="mt-2 text-sm text-ink/60">Resumen por vuelta: tiempo, ritmo máximo y pulso.</figcaption>
+      </figure>
+    </div>
+
+    <div class="mt-10 grid gap-10 md:grid-cols-2">
+      <div>
+        <h3 class="font-display text-xl">Lo que hace</h3>
+        <ul class="mt-3 space-y-1.5 text-sm text-ink/80">
+          <li>· Elige tu 1ª vuelta (de 2:00 a 4:00 en pasos de 4 s).</li>
+          <li>· Muestra el objetivo de cada vuelta y avisa si te pasas.</li>
+          <li>· Tono + vibración en cada cuarto de vuelta (100 m).</li>
+          <li>· Tono triple al cerrar vuelta.</li>
+          <li>· Modo manual (botón de vuelta) o automático por GPS (400 m).</li>
+          <li>· Graba actividad FIT estándar para Garmin Connect, Strava, etc.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-display text-xl">Dispositivos compatibles</h3>
+        <ul class="mt-3 space-y-1.5 text-sm text-ink/80">
+          {devices.map((d) => <li>· {d}</li>)}
+        </ul>
+        <p class="mt-3 text-xs text-ink/50">Total: 54 dispositivos. Lista completa en la ficha de Connect IQ.</p>
+      </div>
+    </div>
+
+    <a
+      href="https://apps.garmin.com/en-US/apps/2cf041b6-28ad-4d4d-ba77-31f2a947d2b1"
+      data-umami-event="connect-iq-store-click"
+      class="mt-10 inline-block rounded-full bg-accent px-5 py-2 text-sm text-paper hover:opacity-90"
+    >
+      Ver en Connect IQ Store →
+    </a>
+
+    <p class="mt-6 text-sm text-ink/60">
+      ¿Sin reloj compatible? Sigue leyendo — el protocolo se puede ejecutar con un cronómetro
+      normal y un poco de atención.
+    </p>
   </section>
 
   <!-- 2. No calentamiento -->
@@ -157,9 +219,10 @@ const devices = [
             Es la modalidad menos invasiva mentalmente y la que mejor permite ir al fallo real.
           </li>
           <li>
-            <strong>3 — Reloj con metrónomo o app dedicada.</strong> Cualquier dispositivo que pueda
-            emitir un tono cada cuarto de vuelta al ritmo objetivo. La <a href={`${base}#app`} class="text-accent underline-offset-4 hover:underline">app que hemos publicado para Garmin</a> hace exactamente esto, y además
-            graba la actividad para analizarla después.
+            <strong>3 — Reloj con metrónomo o app dedicada.</strong> La
+            <a href="#app" class="text-accent underline-offset-4 hover:underline">app para Garmin</a>
+            descrita arriba hace exactamente esto: un tono cada cuarto de vuelta al ritmo objetivo.
+            Es la forma más cómoda y precisa si tienes un reloj compatible.
           </li>
         </ol>
       </div>
@@ -205,59 +268,4 @@ const devices = [
     </div>
   </section>
 
-  <!-- App como facilitador -->
-  <section id="app" class="mt-24 rounded-lg border border-ink/10 bg-white/40 p-8 md:p-12">
-    <p class="text-xs uppercase tracking-widest text-ink/50">Facilitador opcional</p>
-    <h2 class="mt-1 font-display text-4xl">App para Garmin</h2>
-    <p class="mt-4 max-w-2xl text-ink/80">
-      Hemos publicado <em>Alvarez — Diper</em> en el Connect IQ Store. Ejecuta el protocolo completo:
-      calcula el objetivo de cada vuelta, emite un tono cada cuarto de 400 m como metrónomo, marca
-      los pasos de vuelta y graba la actividad en FIT estándar. No es imprescindible para el test,
-      pero te quita de encima el cronometraje y te deja correr.
-    </p>
-
-    <div class="mt-10 grid gap-8 md:grid-cols-3">
-      <figure>
-        <img src={`${base}images/screen_menu.png`} alt="Menú principal" class="w-full rounded border border-ink/10" />
-        <figcaption class="mt-2 text-sm text-ink/60">Fija tu primera vuelta y modo antes de empezar.</figcaption>
-      </figure>
-      <figure>
-        <img src={`${base}images/screen_activity.png`} alt="Pantalla de actividad" class="w-full rounded border border-ink/10" />
-        <figcaption class="mt-2 text-sm text-ink/60">Tiempo grande, objetivo visible, barra con marcas de cuarto.</figcaption>
-      </figure>
-      <figure>
-        <img src={`${base}images/screen_summary.png`} alt="Resumen" class="w-full rounded border border-ink/10" />
-        <figcaption class="mt-2 text-sm text-ink/60">Resumen por vuelta: tiempo, ritmo máximo y pulso.</figcaption>
-      </figure>
-    </div>
-
-    <div class="mt-10 grid gap-10 md:grid-cols-2">
-      <div>
-        <h3 class="font-display text-xl">Lo que hace</h3>
-        <ul class="mt-3 space-y-1.5 text-sm text-ink/80">
-          <li>· Elige tu 1ª vuelta (de 2:00 a 4:00 en pasos de 4 s).</li>
-          <li>· Muestra el objetivo de cada vuelta y avisa si te pasas.</li>
-          <li>· Tono + vibración en cada cuarto de vuelta (100 m).</li>
-          <li>· Tono triple al cerrar vuelta.</li>
-          <li>· Modo manual (botón de vuelta) o automático por GPS (400 m).</li>
-          <li>· Graba actividad FIT estándar para Garmin Connect, Strava, etc.</li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="font-display text-xl">Dispositivos compatibles</h3>
-        <ul class="mt-3 space-y-1.5 text-sm text-ink/80">
-          {devices.map((d) => <li>· {d}</li>)}
-        </ul>
-        <p class="mt-3 text-xs text-ink/50">Total: 54 dispositivos. Lista completa en la ficha de Connect IQ.</p>
-      </div>
-    </div>
-
-    <a
-      href="https://apps.garmin.com/en-US/apps/2cf041b6-28ad-4d4d-ba77-31f2a947d2b1"
-      data-umami-event="connect-iq-store-click"
-      class="mt-10 inline-block rounded-full bg-ink px-5 py-2 text-sm text-paper hover:opacity-90"
-    >
-      Ver en Connect IQ Store →
-    </a>
-  </section>
 </Base>
