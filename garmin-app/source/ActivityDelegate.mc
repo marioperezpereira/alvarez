@@ -13,19 +13,36 @@ class ActivityDelegate extends WatchUi.BehaviorDelegate {
     // Running:  Back/Lap = mark lap,  Start/Stop = pause → pause menu
     // Pause menu handles resume / end via native Menu2
 
-    function onBack() {
-        if ($.workout.isRunning && !$.workout.isPaused) {
-            // Running + Back/Lap = complete lap (manual mode)
-            if ($.workout.mode == $.MODE_MANUAL) {
-                $.workout.completeLap();
-                WatchUi.requestUpdate();
-            }
+    hidden function _tryManualLap() as Boolean {
+        if ($.workout.isRunning && !$.workout.isPaused
+            && $.workout.mode == $.MODE_MANUAL) {
+            $.workout.completeLap();
+            WatchUi.requestUpdate();
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    function onBack() {
+        // Back maps to Lap on some devices; keep this as fallback.
+        if (_tryManualLap()) {
+            return true;
+        }
+        return false;
+    }
+
+    function onLap() {
+        // Explicit lap handler for devices that route lap to onLap().
+        return _tryManualLap();
     }
 
     function onKey(keyEvent) {
         var key = keyEvent.getKey();
+
+        // Some devices route lap through key events instead of onLap().
+        if (key == WatchUi.KEY_LAP) {
+            return _tryManualLap();
+        }
 
         // Start/Stop button = pause and show pause menu
         if (key == WatchUi.KEY_ENTER || key == WatchUi.KEY_START) {

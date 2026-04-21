@@ -13,16 +13,16 @@ class SummaryDelegate extends WatchUi.BehaviorDelegate {
 
     function onBack() {
         System.exit();
-        return true;
     }
 
     function onSelect() {
-        // Advance page on tap/select. Exits if already on the last page.
+        // Advance page on tap/select. Exit only when no further paging is
+        // possible from the current state.
         if (_view.isAtEnd()) {
             System.exit();
-            return true;
+        } else {
+            _view.nextPage();
         }
-        _view.nextPage();
         return true;
     }
 

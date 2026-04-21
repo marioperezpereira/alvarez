@@ -8,6 +8,7 @@ import Toybox.Timer;
 
 const MODE_MANUAL = 0;
 const MODE_GPS = 1;
+const INCOMPLETE_DIST_THRESHOLD_M = 200.0;
 
 class WorkoutSession {
 
@@ -27,6 +28,10 @@ class WorkoutSession {
     var lapMaxSpeed = 0.0;      // m/s
 
     var session = null;
+
+    // If true, createSession/start failed and we continue without FIT so the
+    // user can still complete the workout view flow.
+    var recordingUnavailable = false;
 
     function initialize() {
     }
@@ -54,8 +59,13 @@ class WorkoutSession {
     // timer was stopped without pressing, which doesn't happen — return
     // false in that case.
     function isIncompleteLap(lap) {
+        // Manual laps are explicitly user-triggered and should not be marked
+        // incomplete due to noisy/absent GPS distance.
+        if (mode == $.MODE_MANUAL) {
+            return false;
+        }
         var dist = lap["distance"];
-        if (dist != null && dist > 0.0 && dist < 200.0) {
+        if (dist != null && dist > 0.0 && dist < $.INCOMPLETE_DIST_THRESHOLD_M) {
             return true;
         }
         return false;
@@ -132,20 +142,31 @@ class WorkoutSession {
     }
 
     function startWorkout() {
-        // Create FIT recording session.
-        // NOTE: on CIQ 1.x the sport/subSport constants live in
-        // ActivityRecording; on 2.x+ they were duplicated under Activity.
-        // ActivityRecording.SPORT_* works across all supported devices.
-        session = ActivityRecording.createSession({
-            :name => "Alvarez - Diper",
-            :sport => ActivityRecording.SPORT_RUNNING,
-            :subSport => ActivityRecording.SUB_SPORT_TRACK
-        });
+        recordingUnavailable = false;
+        session = null;
+
+        // Create FIT recording session using non-deprecated Activity constants.
+        var sport = Activity.SPORT_RUNNING;
+        var subSport = Activity.SUB_SPORT_TRACK;
+
+        try {
+            session = ActivityRecording.createSession({
+                :name => "Alvarez - Diper",
+                :sport => sport,
+                :subSport => subSport
+            });
+            if (session != null) {
+                session.start();
+            } else {
+                recordingUnavailable = true;
+            }
+        } catch (e) {
+            session = null;
+            recordingUnavailable = true;
+        }
 
         // Enable GPS
         Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
-
-        session.start();
         isRunning = true;
         isPaused = false;
         currentLap = 1;
@@ -185,7 +206,11 @@ class WorkoutSession {
         isPaused = true;
         pauseStartTime = System.getTimer();
         if (session != null) {
-            session.stop();
+            try {
+                session.stop();
+            } catch (e) {
+                recordingUnavailable = true;
+            }
         }
     }
 
@@ -193,10 +218,22 @@ class WorkoutSession {
         if (!isRunning || !isPaused) {
             return;
         }
+
+        // Rebase distance so movement while paused does not count toward the
+        // current GPS lap after resume.
+        var info = Activity.getActivityInfo();
+        if (info != null && info.elapsedDistance != null) {
+            lapDistanceAtStart = info.elapsedDistance;
+        }
+
         totalPausedMs += System.getTimer() - pauseStartTime;
         isPaused = false;
         if (session != null) {
-            session.start();
+            try {
+                session.start();
+            } catch (e) {
+                recordingUnavailable = true;
+            }
         }
     }
 
@@ -279,7 +316,11 @@ class WorkoutSession {
 
         // Record lap in FIT (only while the session is actively recording)
         if (addFitLap && session != null) {
-            session.addLap();
+            try {
+                session.addLap();
+            } catch (e) {
+                recordingUnavailable = true;
+            }
         }
 
         if (playTone) {
@@ -387,10 +428,18 @@ class WorkoutSession {
         isRunning = false;
         isPaused = false;
         if (session != null) {
-            if (!sessionAlreadyStopped) {
-                session.stop();
+            try {
+                if (!sessionAlreadyStopped) {
+                    session.stop();
+                }
+            } catch (e) {
+                recordingUnavailable = true;
             }
-            session.save();
+            try {
+                session.save();
+            } catch (e) {
+                recordingUnavailable = true;
+            }
             session = null;
         }
         Position.enableLocationEvents(Position.LOCATION_DISABLE, method(:onPosition));
@@ -399,8 +448,14 @@ class WorkoutSession {
     function discardWorkout() {
         isRunning = false;
         if (session != null) {
-            session.stop();
-            session.discard();
+            try {
+                session.stop();
+            } catch (e) {
+            }
+            try {
+                session.discard();
+            } catch (e) {
+            }
             session = null;
         }
         Position.enableLocationEvents(Position.LOCATION_DISABLE, method(:onPosition));

@@ -64,8 +64,9 @@ class SummaryView extends WatchUi.View {
     // True when the next invocation of nextPage() would no longer advance —
     // i.e. we're on the final page and no more lap blocks to reveal.
     function isAtEnd() as Boolean {
-        if (_page < 2) { return false; }
-        return !_hasMoreLapBlocks($.workout.lapHistory);
+        // Page 2 is always terminal. Lap-table block pagination only applies
+        // while _page == 1.
+        return _page >= 2;
     }
 
     function onUpdate(dc as Graphics.Dc) as Void {
