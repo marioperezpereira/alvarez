@@ -288,3 +288,22 @@ If there is ever a tradeoff between:
 - and behaving more like a robust Garmin app
 
 the implementation should choose the more robust Garmin-like behavior.
+
+## Local build and simulator commands
+
+Use the helper script:
+
+- build for default device (`fr970`):
+  - `./scripts/ciq.sh build`
+- build for a specific device:
+  - `./scripts/ciq.sh build fenix5`
+- build + run in simulator:
+  - `./scripts/ciq.sh all fr970`
+
+Notes:
+- the script enables Java headless mode to avoid `Abort trap: 6` crashes seen
+  with OpenJDK 25 during `monkeyc` and `monkeydo` runs
+- it auto-detects the newest local Connect IQ SDK under
+  `~/Library/Application Support/Garmin/ConnectIQ/Sdks`
+- set `CIQ_DEV_KEY` if your developer key is not at
+  `~/.garmin-keys/developer_key.der`

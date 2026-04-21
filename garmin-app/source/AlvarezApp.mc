@@ -32,6 +32,12 @@ class AlvarezApp extends Application.AppBase {
 
     (:modern_only)
     static function buildMainMenu() {
+        var menu = buildMainMenuView();
+        return [menu, new ConfigMenuDelegate()] as Array;
+    }
+
+    (:modern_only)
+    static function buildMainMenuView() {
         var menu = new WatchUi.Menu2({:title => "Alvarez - Diper"});
 
         var lapLabel = WorkoutSession.formatTimePadded($.workout.firstLapTarget);
@@ -42,7 +48,7 @@ class AlvarezApp extends Application.AppBase {
 
         menu.addItem(new WatchUi.MenuItem("Start workout", null, "start", null));
 
-        return [menu, new ConfigMenuDelegate()] as Array;
+        return menu;
     }
 
 }

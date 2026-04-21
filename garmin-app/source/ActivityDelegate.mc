@@ -25,10 +25,10 @@ class ActivityDelegate extends WatchUi.BehaviorDelegate {
 
     function onBack() {
         // Back maps to Lap on some devices; keep this as fallback.
-        if (_tryManualLap()) {
-            return true;
-        }
-        return false;
+        _tryManualLap();
+        // Always consume Back to avoid device-specific default exits from
+        // interrupting an active workout flow.
+        return true;
     }
 
     function onLap() {
