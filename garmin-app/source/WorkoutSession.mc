@@ -496,10 +496,12 @@ class WorkoutSession {
             try {
                 session.stop();
             } catch (e) {
+                recordingUnavailable = true;
             }
             try {
                 session.discard();
             } catch (e) {
+                recordingUnavailable = true;
             }
             session = null;
         }
