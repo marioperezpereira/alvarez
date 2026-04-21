@@ -35,7 +35,7 @@ class SummaryView extends WatchUi.View {
 
     // Called by the delegate
     function nextPage() as Void {
-        var laps = $.workout.lapHistory;
+        var laps = $.workout.lapHistory as Array;
         if (_page == 1 && _hasMoreLapBlocks(laps)) {
             _lapsBlock++;
             WatchUi.requestUpdate();
@@ -89,7 +89,7 @@ class SummaryView extends WatchUi.View {
     hidden function _renderResult(dc) {
         var w = dc.getWidth();
         var h = dc.getHeight();
-        var laps = $.workout.lapHistory;
+        var laps = $.workout.lapHistory as Array;
 
         // Top label
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
@@ -109,13 +109,13 @@ class SummaryView extends WatchUi.View {
         for (var i = 0; i < laps.size(); i++) {
             var lap = laps[i];
             if ($.workout.isIncompleteLap(lap)) {
-                failedAtLap = lap["lapNum"];
+                failedAtLap = WorkoutSession.lapNum(lap);
                 break;
             }
             if ($.workout.didPassLap(lap)) {
                 completed++;
             } else {
-                failedAtLap = lap["lapNum"];
+                failedAtLap = WorkoutSession.lapNum(lap);
                 break;
             }
         }
@@ -174,7 +174,7 @@ class SummaryView extends WatchUi.View {
     hidden function _renderLapsTable(dc) {
         var w = dc.getWidth();
         var h = dc.getHeight();
-        var laps = $.workout.lapHistory;
+        var laps = $.workout.lapHistory as Array;
 
         var topY = h * 10 / 100;
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
@@ -227,9 +227,9 @@ class SummaryView extends WatchUi.View {
         var y = divY + 4;
         for (var i = startIdx; i < endIdx; i++) {
             var lap = laps[i];
-            var lapNum = lap["lapNum"];
-            var timeMs = lap["timeMs"];
-            var hr = lap["maxHr"];
+            var lapNum = WorkoutSession.lapNum(lap);
+            var timeMs = WorkoutSession.lapTimeMs(lap);
+            var hr = WorkoutSession.lapMaxHeartRate(lap);
             var target = $.workout.targetForLap(lapNum);
             var incomplete = $.workout.isIncompleteLap(lap);
             var passed = $.workout.didPassLap(lap) && !incomplete;
@@ -261,7 +261,7 @@ class SummaryView extends WatchUi.View {
         }
     }
 
-    hidden function _hasMoreLapBlocks(laps) {
+    hidden function _hasMoreLapBlocks(laps as Array) {
         return (_lapsBlock + 1) * _lapsPerBlock < laps.size();
     }
 
@@ -270,7 +270,7 @@ class SummaryView extends WatchUi.View {
     hidden function _renderProgression(dc) {
         var w = dc.getWidth();
         var h = dc.getHeight();
-        var laps = $.workout.lapHistory;
+        var laps = $.workout.lapHistory as Array;
 
         var topY = h * 8 / 100;
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
@@ -295,16 +295,16 @@ class SummaryView extends WatchUi.View {
         var hrY = h * 66 / 100;
 
         _drawBarChart(dc, "TIEMPO / VUELTA", chartX, paceY, chartW, bandH,
-            laps, "timeMs", true);
+            laps, :timeMs, true);
         _drawBarChart(dc, "HR MÁX / VUELTA", chartX, hrY, chartW, bandH,
-            laps, "maxHr", false);
+            laps, :maxHr, false);
     }
 
     // Draws a labeled bar chart inside (x, y, w, h). `isPace` implies both
     // the series color (orange for pace, white for HR) AND whether the
     // scale is inverted (smaller pace value = taller bar). Combined to
     // stay under CIQ 1.x's 9-argument limit per method.
-    hidden function _drawBarChart(dc, label, x, y, w, h, laps, field, isPace) {
+    hidden function _drawBarChart(dc, label, x, y, w, h, laps as Array, field, isPace) {
         var baseColor = isPace ? $.COLOR_ACCENT : Graphics.COLOR_WHITE;
         var invertScale = isPace;
 
@@ -317,9 +317,7 @@ class SummaryView extends WatchUi.View {
         var vmin = -1;
         var vmax = -1;
         for (var i = 0; i < laps.size(); i++) {
-            var v = laps[i][field];
-            if (v == null) { continue; }
-            var vi = v.toNumber();
+            var vi = WorkoutSession.lapFieldNumber(laps[i], field, 0);
             if (vi <= 0) { continue; }
             if (vmin < 0 || vi < vmin) { vmin = vi; }
             if (vi > vmax) { vmax = vi; }
@@ -347,9 +345,7 @@ class SummaryView extends WatchUi.View {
 
         for (var i = 0; i < n; i++) {
             var lap = laps[i];
-            var v = lap[field];
-            if (v == null) { continue; }
-            var vi = v.toNumber();
+            var vi = WorkoutSession.lapFieldNumber(lap, field, 0);
             if (vi <= 0) { continue; }
 
             // Normalize to 0..80 within min/max, floor at 20% so the shortest

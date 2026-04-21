@@ -10,6 +10,14 @@ const MODE_MANUAL = 0;
 const MODE_GPS = 1;
 const INCOMPLETE_DIST_THRESHOLD_M = 200.0;
 
+const LAP_KEY_NUM = :lapNum;
+const LAP_KEY_TIME_MS = :timeMs;
+const LAP_KEY_DISTANCE = :distance;
+const LAP_KEY_AVG_PACE = :avgPace;
+const LAP_KEY_AVG_HR = :avgHr;
+const LAP_KEY_MAX_HR = :maxHr;
+const LAP_KEY_MAX_PACE = :maxPace;
+
 class WorkoutSession {
 
     var firstLapTarget = 120;   // seconds, default 2:00
@@ -21,7 +29,7 @@ class WorkoutSession {
     var lapStartTime = 0;       // System.getTimer() ms
     var pauseStartTime = 0;     // when pause began
     var totalPausedMs = 0;      // accumulated pause time for current lap
-    var lapHistory = [];
+    var lapHistory as Array = [];
     var quartersPlayed = 0;
     var lapDistanceAtStart = 0.0;
     var lapMaxHr = 0;
@@ -48,8 +56,8 @@ class WorkoutSession {
 
     // Did this stored lap finish under its target?
     function didPassLap(lap) {
-        var target = targetForLap(lap["lapNum"]);
-        return (lap["timeMs"] / 1000) <= target;
+        var target = targetForLap(WorkoutSession.lapNum(lap));
+        return (WorkoutSession.lapTimeMs(lap) / 1000) <= target;
     }
 
     // Flag laps that were never fully completed (user failed mid-lap).
@@ -64,8 +72,8 @@ class WorkoutSession {
         if (mode == $.MODE_MANUAL) {
             return false;
         }
-        var dist = lap["distance"];
-        if (dist != null && dist > 0.0 && dist < $.INCOMPLETE_DIST_THRESHOLD_M) {
+        var dist = WorkoutSession.lapDistance(lap);
+        if (dist > 0.0 && dist < $.INCOMPLETE_DIST_THRESHOLD_M) {
             return true;
         }
         return false;
@@ -73,30 +81,67 @@ class WorkoutSession {
 
     // --- Session-level aggregates over lapHistory ---
 
-    static function totalElapsedMs(history) {
+    static function totalElapsedMs(history as Array) {
         var total = 0;
         for (var i = 0; i < history.size(); i++) {
-            total += history[i]["timeMs"];
+            total += lapTimeMs(history[i]);
         }
         return total;
     }
 
-    static function totalDistance(history) {
+    static function totalDistance(history as Array) {
         var total = 0.0;
         for (var i = 0; i < history.size(); i++) {
-            var d = history[i]["distance"];
-            if (d != null) { total += d; }
+            total += lapDistance(history[i]);
         }
         return total;
     }
 
-    static function sessionMaxHr(history) {
+    static function sessionMaxHr(history as Array) {
         var max = 0;
         for (var i = 0; i < history.size(); i++) {
-            var h = history[i]["maxHr"];
-            if (h != null && h > max) { max = h; }
+            var h = lapMaxHeartRate(history[i]);
+            if (h > max) { max = h; }
         }
         return max;
+    }
+
+    hidden static function lapFieldValue(lap, key) {
+        if (!(lap instanceof Dictionary)) {
+            return null;
+        }
+        return (lap as Dictionary).get(key);
+    }
+
+    static function lapFieldNumber(lap, key, defaultValue) {
+        var value = lapFieldValue(lap, key);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof Number) {
+            return value;
+        }
+        try {
+            return value.toNumber();
+        } catch (e) {
+            return defaultValue;
+        }
+    }
+
+    static function lapNum(lap) {
+        return lapFieldNumber(lap, $.LAP_KEY_NUM, 0);
+    }
+
+    static function lapTimeMs(lap) {
+        return lapFieldNumber(lap, $.LAP_KEY_TIME_MS, 0);
+    }
+
+    static function lapDistance(lap) {
+        return lapFieldNumber(lap, $.LAP_KEY_DISTANCE, 0.0);
+    }
+
+    static function lapMaxHeartRate(lap) {
+        return lapFieldNumber(lap, $.LAP_KEY_MAX_HR, 0);
     }
 
     // Format seconds to "M:SS" string
@@ -304,13 +349,13 @@ class WorkoutSession {
 
         // Store lap data
         var lapData = {
-            "lapNum" => currentLap,
-            "timeMs" => elapsedMs,
-            "distance" => lapDist,
-            "avgPace" => avgPace,
-            "avgHr" => avgHr,
-            "maxHr" => lapMaxHr,
-            "maxPace" => maxPace
+            :lapNum => currentLap,
+            :timeMs => elapsedMs,
+            :distance => lapDist,
+            :avgPace => avgPace,
+            :avgHr => avgHr,
+            :maxHr => lapMaxHr,
+            :maxPace => maxPace
         };
         lapHistory.add(lapData);
 
